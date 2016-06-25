@@ -29,6 +29,11 @@ defmodule Battleship do
     :ok
   end
 
+  def constants do
+    %{untouched: 0, miss: 1, partial_hit: 2, hit: 3, placed_ship: 4,
+      row_length: 8, default_ships: [4, 3, 2, 2]}
+  end
+
   defp seed_random do
     << a :: 32, b :: 32, c :: 32 >> = :crypto.rand_bytes(12)
     :random.seed(a,b,c)
