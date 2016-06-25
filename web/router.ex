@@ -20,7 +20,8 @@ defmodule Battleship.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Battleship do
-  #   pipe_through :api
-  # end
+  scope "/api", Battleship do
+    pipe_through :api
+    get "/guess", GuessController, :show
+  end
 end
