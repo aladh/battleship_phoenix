@@ -4,6 +4,8 @@ defmodule Battleship do
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
+    seed_random
+
     import Supervisor.Spec
 
     # Define workers and child supervisors to be supervised
@@ -25,5 +27,10 @@ defmodule Battleship do
   def config_change(changed, _new, removed) do
     Battleship.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp seed_random do
+    << a :: 32, b :: 32, c :: 32 >> = :crypto.rand_bytes(12)
+    :random.seed(a,b,c)
   end
 end
