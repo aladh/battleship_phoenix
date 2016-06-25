@@ -21,3 +21,10 @@ import ReactDOM from "react-dom"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+
+import Game from "./Game"
+
+ReactDOM.render(
+  <Game />,
+  document.getElementById("hello-world")
+)
