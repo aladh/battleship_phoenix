@@ -16,10 +16,30 @@
   padding: 2px;
 }
 
-._0 {
+.status_0 {
   background-color: lightblue;
 }
 
-._0:hover {
+.status_0:hover {
   opacity: 0.5;
+}
+
+.status_4 {
+  background-color: black;
+}
+
+div[data-ship-id = '1'] {
+  border: 1px solid red;
+}
+
+div[data-ship-id = '2'] {
+  border: 1px solid blue;
+}
+
+div[data-ship-id = '3'] {
+  border: 1px solid green;
+}
+
+div[data-ship-id = '4'] {
+  border: 1px solid yellow;
 }
