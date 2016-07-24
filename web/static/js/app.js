@@ -24,7 +24,4 @@ import ReactDOM from "react-dom"
 
 import Game from "./Game"
 
-ReactDOM.render(
-  <Game />,
-  document.getElementById("hello-world")
-)
+ReactDOM.render(<Game />, document.getElementById("game"))

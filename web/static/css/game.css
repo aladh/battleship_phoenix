@@ -1,0 +1,25 @@
+#game {
+  text-align: center;
+}
+
+.square {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  border: 1px solid black;
+}
+
+.grid {
+  border: 1px solid black;
+  display: inline-block;
+  font-size: 0;
+  padding: 2px;
+}
+
+._0 {
+  background-color: lightblue;
+}
+
+._0:hover {
+  opacity: 0.5;
+}
