@@ -18,7 +18,7 @@ defmodule Battleship.BoardGenerator do
 
     # IEx.pry
 
-    coords = ship_coords(ship, row_length)
+    coords = ship_coords(ship.size, row_length)
 
     new_grid = place_ship(grid, coords, row_length, ship)
 
@@ -27,34 +27,42 @@ defmodule Battleship.BoardGenerator do
     _generate(rest, new_grid, row_length)
   end
 
-  defp ship_coords(ship = %{size: size}, row_length) when size <= row_length do
-    {x, y} = {:rand.uniform(row_length), :rand.uniform(row_length)}
+  defp ship_coords(size, row_length) when size <= row_length do
+    coords = [{:rand.uniform(row_length), :rand.uniform(row_length)}]
     direction = :rand.uniform(2)
+    _ship_coords(coords, direction, row_length, size)
+  end
 
-    coords = [{x, y}]
-
-    if in_bounds?(Enum.at(coords, 0), direction, row_length) do
+  defp _ship_coords(coords, direction, row_length, size) when length(coords) < size do
+    if room_for_next_square?(List.last(coords), direction, row_length) do
+      IO.puts length(coords)
       add_square(coords, direction, row_length)
+      |> _ship_coords(direction, row_length, size)
     else
-      ship_coords(ship, row_length)
+      IO.puts "Reset"
+      ship_coords(size, row_length)
     end
   end
 
-  defp in_bounds?({x, _y}, 1, row_length) do
+  defp _ship_coords(coords, _direction, _row_length, _size) do
+    coords
+  end
+
+  defp room_for_next_square?({x, _y}, 1, row_length) do
     x < row_length
   end
 
-  defp in_bounds?({_x, y}, 2, row_length) do
+  defp room_for_next_square?({_x, y}, 2, row_length) do
     y < row_length
   end
 
   defp add_square(coords, 1, row_length) do
-    {x, y} = Enum.at(coords, 0)
+    {x, y} = List.last(coords)
     Enum.concat(coords, [{x + 1, y}])
   end
 
   defp add_square(coords, 2, row_length) do
-    {x, y} = Enum.at(coords, 0)
+    {x, y} = List.last(coords)
     Enum.concat(coords, [{x, y + 1}])
   end
 
