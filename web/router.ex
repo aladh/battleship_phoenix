@@ -23,5 +23,6 @@ defmodule Battleship.Router do
   scope "/api", Battleship do
     pipe_through :api
     get "/guess", GuessController, :show
+    get "/board/new", BoardController, :new
   end
 end

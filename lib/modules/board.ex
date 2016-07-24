@@ -1,5 +1,4 @@
 defmodule Battleship.Board do
-  @derive [Poison.Encoder]
   defstruct squares: [], row_length: Battleship.constants[:row_length]
 
   def new(ships \\ Battleship.constants[:default_ships], row_length \\ Battleship.constants[:row_length]) do
