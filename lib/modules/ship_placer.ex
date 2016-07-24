@@ -1,17 +1,13 @@
-defmodule Battleship.BoardGenerator do
-  def generate(ships, row_length) do
-    _generate(ships, Battleship.Board.initialize_squares(row_length))
-  end
-
-  defp _generate([], board) do
-    board
-  end
-
-  defp _generate([ship | rest], board) do
+defmodule Battleship.ShipPlacer do
+  def place(board, [ship | rest]) do
     coords = ship_coords(ship.size, board)
     new_board = Battleship.Board.place_ship(board, ship, coords)
     Battleship.Board.print(new_board)
-    _generate(rest, new_board)
+    place(new_board, rest)
+  end
+
+  def place(board, []) do
+    board
   end
 
   defp ship_coords(size, board = %{row_length: row_length}) when size <= row_length do
