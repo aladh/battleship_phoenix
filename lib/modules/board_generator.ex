@@ -1,46 +1,39 @@
-require IEx
-
 defmodule Battleship.BoardGenerator do
   def generate(ships, row_length) do
-    _generate(ships, initialize_grid(row_length), row_length)
+    _generate(ships, Battleship.Board.initialize_squares(row_length))
   end
 
-  defp _generate([], grid, row_length) do
-    grid
+  defp _generate([], board) do
+    board
   end
 
-  defp _generate([ship | rest], grid, row_length) do
-
-
-    # if empty_squares?(ship_coords, grid, row_length) do
-    #   IO.puts "empty"
-    # end
-
-    # IEx.pry
-
-    coords = ship_coords(ship.size, row_length)
-
-    new_grid = place_ship(grid, coords, row_length, ship)
-
-    print_grid(new_grid, row_length)
-
-    _generate(rest, new_grid, row_length)
+  defp _generate([ship | rest], board) do
+    coords = ship_coords(ship.size, board)
+    new_grid = place_ship(board.squares, coords, board.row_length, ship)
+    print_grid(new_grid, board.row_length)
+    new_board = Map.update!(board, :squares, (fn(_) -> new_grid end))
+    _generate(rest, new_board)
   end
 
-  defp ship_coords(size, row_length) when size <= row_length do
-    coords = [{:rand.uniform(row_length), :rand.uniform(row_length)}]
+  defp ship_coords(size, board = %{row_length: row_length}) when size <= row_length do
+    initial_coord = {:rand.uniform(row_length), :rand.uniform(row_length)}
     direction = :rand.uniform(2)
-    _ship_coords(coords, direction, row_length, size)
-  end
-
-  defp _ship_coords(coords, direction, row_length, size) when length(coords) < size do
-    if room_for_next_square?(List.last(coords), direction, row_length) do
-      IO.puts length(coords)
-      add_square(coords, direction, row_length)
-      |> _ship_coords(direction, row_length, size)
+    if Battleship.Board.square_empty?(board, initial_coord) do
+       _ship_coords([initial_coord], direction, board, size)
     else
       IO.puts "Reset"
-      ship_coords(size, row_length)
+      ship_coords(size, board)
+    end
+  end
+
+  defp _ship_coords(coords, direction, board, size) when length(coords) < size do
+    next_coord = get_next_coord(List.last(coords), direction)
+    if valid_to_place?(next_coord, direction, board) && Battleship.Board.square_empty?(board, next_coord) do
+      IO.puts length(coords)
+      _ship_coords(Enum.concat(coords, [next_coord]), direction, board, size)
+    else
+      IO.puts "Reset"
+      ship_coords(size, board)
     end
   end
 
@@ -48,22 +41,20 @@ defmodule Battleship.BoardGenerator do
     coords
   end
 
-  defp room_for_next_square?({x, _y}, 1, row_length) do
-    x < row_length
+  defp valid_to_place?({x, _y}, 1, board) do
+    x <= board.row_length
   end
 
-  defp room_for_next_square?({_x, y}, 2, row_length) do
-    y < row_length
+  defp valid_to_place?({_x, y}, 2, board) do
+    y <= board.row_length
   end
 
-  defp add_square(coords, 1, row_length) do
-    {x, y} = List.last(coords)
-    Enum.concat(coords, [{x + 1, y}])
+  defp get_next_coord({x, y}, 1) do
+    {x + 1, y}
   end
 
-  defp add_square(coords, 2, row_length) do
-    {x, y} = List.last(coords)
-    Enum.concat(coords, [{x, y + 1}])
+  defp get_next_coord({x, y}, 2) do
+    {x, y + 1}
   end
 
   defp place_ship(grid, ship_coords, row_length, ship) do
@@ -79,19 +70,6 @@ defmodule Battleship.BoardGenerator do
     grid
   end
 
-  defp empty_squares?([coord | rest], grid, row_length) do
-    valid =
-      grid
-      |> Enum.at(index(coord, row_length))
-      |> empty_square?
-    if valid, do: empty_squares?(rest, grid, row_length), else: false
-  end
-
-  defp empty_squares?([], _, _), do: true
-
-  defp empty_square?(%Battleship.Square{ship: nil}), do: true
-  defp empty_square?(_), do: false
-
   defp print_grid(grid, row_length), do: _print_grid(grid, 1, row_length)
 
   defp _print_grid(grid, row, row_length) do
@@ -105,15 +83,7 @@ defmodule Battleship.BoardGenerator do
     end
   end
 
-  defp grid_at_coords(grid, coords, row_length) do
-    Enum.at(grid, index(coords, row_length), :none)
-  end
-
   defp index({x, y}, row_length) do
     (y - 1) * row_length + x - 1
-  end
-
-  defp initialize_grid(row_length) do
-    for _ <- 0..row_length * row_length - 1, do: %Battleship.Square{}
   end
 end
