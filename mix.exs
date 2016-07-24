@@ -33,6 +33,7 @@ defmodule Battleship.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:mix_test_watch, "~> 0.2", only: :dev}]
   end
 end
