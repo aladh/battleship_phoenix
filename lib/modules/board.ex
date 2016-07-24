@@ -1,7 +1,8 @@
 defmodule Battleship.Board do
-  defstruct squares: [], row_length: 8
+  @derive [Poison.Encoder]
+  defstruct squares: [], row_length: Battleship.constants[:row_length]
 
-  def initialize(ships, row_length) do
+  def new(ships \\ Battleship.constants[:default_ships], row_length \\ Battleship.constants[:row_length]) do
     squares = for _ <- 0..row_length * row_length - 1, do: %Battleship.Square{}
     Battleship.ShipPlacer.place(%Battleship.Board{squares: squares, row_length: row_length}, ships)
   end
@@ -16,7 +17,7 @@ defmodule Battleship.Board do
   end
 
   def place_ship(board, ship, [coord | rest]) do
-    new_squares = List.replace_at(board.squares, index_at_coords(coord, board.row_length), %Battleship.Square{ship: ship})
+    new_squares = List.replace_at(board.squares, index_at_coords(coord, board.row_length), %Battleship.Square{ship: ship, status: Battleship.constants[:placed_ship]})
     Map.update!(board, :squares, (fn(_) -> new_squares end))
     |> place_ship(ship, rest)
   end
@@ -28,7 +29,7 @@ defmodule Battleship.Board do
   defp _print(board = %{squares: squares, row_length: row_length}, row_number) do
     squares
     |> Enum.slice((row_number - 1) * row_length, row_length)
-    |> Enum.map(fn(square) -> square.ship end)
+    |> Enum.map(fn(square) -> square end)
     |> IO.inspect(width: 500)
 
     if row_number < row_length do
