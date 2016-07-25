@@ -16,14 +16,30 @@ defmodule Battleship.Board do
     |> Battleship.Square.revealed?
   end
 
-  def place_ship(board, _ship, []) do
-    board
+  def unrevealed_squares?(%{squares: squares}) do
+     _unrevealed_squares(squares)
+  end
+
+  defp _unrevealed_squares([square | rest]) do
+    if Battleship.Square.revealed?(square) do
+      _unrevealed_squares(rest)
+    else
+      true
+    end
+  end
+
+  defp _unrevealed_squares([]) do
+    false
   end
 
   def place_ship(board, ship, [coord | rest]) do
     new_squares = List.replace_at(board.squares, index_at_coords(coord, board.row_length), %Battleship.Square{ship: ship, status: Battleship.constants[:placed_ship]})
     Map.update!(board, :squares, (fn(_) -> new_squares end))
     |> place_ship(ship, rest)
+  end
+
+  def place_ship(board, _ship, []) do
+    board
   end
 
   def index_at_coords({x, y}, row_length \\ Battleship.constants[:row_length]) do
