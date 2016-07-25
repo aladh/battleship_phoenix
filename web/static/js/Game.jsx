@@ -33,20 +33,27 @@ export default class Game extends React.Component {
     this.setState((previousState) => {
       let squares = previousState.player ? this.cpuSquares : this.playerSquares;
       return {player: !previousState.player, currentSquares: squares}
-    })
+    }, () => {
+      if(this.state.player) { return }
+      $.getJSON('/api/guess', this.playerSquares, (response) => {
+        console.log(response);
+      });
+    });
   }
 
   onClick(e) {
-    if(this.state.player == false) {
-      let id = $(e.target).data('square-index');
-      let square = this.cpuSquares[id];
+    if(this.state.player == true) { return }
+    let id = $(e.target).data('square-index');
+    let square = this.cpuSquares[id];
 
-      if(square.ship != null) {
+    if(square.status != Game.untouched && square.status != Game.placedShip) { return }
 
-      } else {
-        square.status = Game.miss;
-        this.setState({currentSquares: this.cpuSquares})
-      }
+    if(square.ship) {
+      square.status = Game.hit;
+      this.setState({currentSquares: this.cpuSquares})
+    } else {
+      square.status = Game.miss;
+      this.setState({currentSquares: this.cpuSquares})
     }
   }
 
@@ -82,6 +89,7 @@ Game.defaultProps = {
   rowLength: 8
 }
 
-// Game.untouched = 0;
+Game.untouched = 0;
 Game.miss = 1;
 Game.hit = 3;
+Game.placedShip = 4;
