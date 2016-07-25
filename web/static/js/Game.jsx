@@ -16,6 +16,7 @@ export default class Game extends React.Component {
 
     this.onContinue = this.onContinue.bind(this)
     this.onClick = this.onClick.bind(this)
+    this.processGuess = this.processGuess.bind(this);
   }
 
   componentWillMount() {
@@ -35,10 +36,19 @@ export default class Game extends React.Component {
       return {player: !previousState.player, currentSquares: squares}
     }, () => {
       if(this.state.player) { return }
-      $.getJSON('/api/guess', {squares: JSON.stringify(this.playerSquares)}, (response) => {
-        console.log(response);
+      $.getJSON('/api/guess', {squares: JSON.stringify(this.playerSquares)}, (index) => {
+        this.processGuess(index)
       });
     });
+  }
+
+  processGuess(index) {
+    let square = this.playerSquares[index];
+    if(square.ship == null) {
+      square.status = Game.miss;
+    } else {
+      square.status = Game.hit;
+    }
   }
 
   onClick(e) {
