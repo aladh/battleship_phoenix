@@ -1,107 +1,78 @@
 import React from "react"
 import $ from "jquery";
+import Board from './Board'
 
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      squares: [],
-      mousePosition: 0
+      currentSquares: [],
+      player: true
     }
 
-    // this.gridStates = {
-    //   untouched: 0,
-    //   placedShip: 4
-    // }
+    this.playerSquares = null;
+    this.cpuSquares = null;
 
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onMouseLeave = this.onMouseLeave.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.onContinue = this.onContinue.bind(this)
+    this.onClick = this.onClick.bind(this)
   }
 
   componentWillMount() {
     $.getJSON('/api/board/new', (response) => {
-      this.setState({squares: response.squares});
+      this.playerSquares = response.squares;
+      this.setState({currentSquares: this.playerSquares});
+    });
+
+    $.getJSON('/api/board/new', (response) => {
+      this.cpuSquares = response.squares;
     });
   }
 
-  endOfRow(cellIndex) {
-   return cellIndex % this.props.rowLength == this.props.rowLength - 1;
- }
+  onContinue() {
+    this.setState((previousState) => {
+      let squares = previousState.player ? this.cpuSquares : this.playerSquares;
+      return {player: !previousState.player, currentSquares: squares}
+    })
+  }
 
- onMouseOver(e) {
-  //  if(!this.state.shipsPlaced) {
-  //    let mousePosition = parseInt(e.target.classList[2]);
-  //    if(this.state.grid[mousePosition] != this.gridStates.placedShip) {
-  //      let newGrid = this.state.grid;
-   //
-  //      newGrid[mousePosition] = this.gridStates.tempPlacedShip
-   //
-  //      this.setState({grid: newGrid})
-  //    }
-  //  }
- }
+  onClick(e) {
+    if(this.state.player == false) {
+      let id = $(e.target).data('square-index');
+      let square = this.cpuSquares[id];
 
- onMouseLeave(e) {
-  //  if(!this.state.shipsPlaced) {
-  //    let mousePosition = parseInt(e.target.classList[2]);
-   //
-  //    if(this.state.grid[mousePosition] != this.gridStates.placedShip) {
-  //      let newGrid = this.state.grid;
-   //
-  //      newGrid[mousePosition] = this.gridStates.untouched;
-   //
-  //      this.setState({grid: newGrid})
-  //    }
-  //  }
- }
+      if(square.ship != null) {
 
- onClick(e) {
-  //  if(!this.state.shipsPlaced) {
-  //    let mousePosition = parseInt(e.target.classList[2]);
-  //    if(this.state.grid[mousePosition] != this.gridStates.placedShip) {
-  //      let newGrid = this.state.grid;
-   //
-  //      newGrid[mousePosition] = this.gridStates.placedShip;
-   //
-  //      this.setState({grid: newGrid})
-  //    }
-  //  }
- }
+      } else {
+        square.status = Game.miss;
+        this.setState({currentSquares: this.cpuSquares})
+      }
+    }
+  }
 
- createCellGrid() {
-   let grid = [];
-
-   for (var i = 0; i < this.state.squares.length; i++) {
-     let square = (
-       <div
-         className={`square status_${this.state.squares[i].status}`}
-         key={i}
-         onMouseOver={this.onMouseOver}
-         onMouseLeave={this.onMouseLeave}
-         onClick={this.onClick}
-         data-ship-id={this.state.squares[i].ship != null ? this.state.squares[i].ship.id : null}
-         data-square-id={i}
-       />
-     )
-
-     grid.push(square);
-
-     if (this.endOfRow(i)) {
-       grid.push(<br key={1000000 + i}/>)
-     }
-   }
-
-   return grid
- }
+  renderCurrentPlayer() {
+    return (
+      <div className="current-player">
+        {this.state.player ? 'Your Board' : "Computer's Board"}
+      </div>
+    )
+  }
 
   render() {
     return(
       <div>
-        <div className="grid">
-          {this.createCellGrid()}
-        </div>
+        {this.renderCurrentPlayer()}
+
+        <Board
+          squares={this.state.currentSquares}
+          rowLength={this.props.rowLength}
+          onClick={this.onClick}
+          hover={!this.state.player}
+        />
+
+        <button onClick={this.onContinue}>
+          Continue
+        </button>
       </div>
     )
   }
@@ -110,3 +81,7 @@ export default class Game extends React.Component {
 Game.defaultProps = {
   rowLength: 8
 }
+
+// Game.untouched = 0;
+Game.miss = 1;
+Game.hit = 3;

@@ -9,27 +9,27 @@
   border: 1px solid black;
 }
 
-.grid {
+.board {
   border: 1px solid black;
   display: inline-block;
   font-size: 0;
   padding: 2px;
 }
 
-.status_0 {
+div[data-square-status = '0'] {
   background-color: lightblue;
 }
 
-.status_0:hover {
+.hover[data-square-status = '0']:hover {
   opacity: 0.5;
 }
 
-.status_4 {
+div[data-square-status = '4'] {
   background-color: black;
 }
 
 div[data-ship-id = '1'] {
-  border: 1px solid red;
+  border: 1px solid orange;
 }
 
 div[data-ship-id = '2'] {
