@@ -85,6 +85,7 @@ export default class Game extends React.Component {
           rowLength={this.props.rowLength}
           onClick={this.onClick}
           hover={!this.state.player}
+          hideShips={!this.state.player}
         />
 
         <button onClick={this.onContinue}>

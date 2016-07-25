@@ -1,4 +1,5 @@
 import React from "react"
+import Game from './Game'
 
 export default class Board extends React.Component {
 
@@ -14,9 +15,9 @@ export default class Board extends React.Component {
         <div
           className={`square ${this.props.hover ? 'hover' : ''}`}
           key={i}
-          data-ship-id={this.props.squares[i].ship != null ? this.props.squares[i].ship.id : null}
+          data-ship-id={(this.props.squares[i].ship != null && !this.props.hideShips)? this.props.squares[i].ship.id : null}
           data-square-index={i}
-          data-square-status={this.props.squares[i].status}
+          data-square-status={(this.props.hideShips && this.props.squares[i].status == 4) ? Game.untouched : this.props.squares[i].status}
           onClick={this.props.onClick}
         />
       )
