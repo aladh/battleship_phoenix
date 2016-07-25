@@ -35,7 +35,7 @@ export default class Game extends React.Component {
       return {player: !previousState.player, currentSquares: squares}
     }, () => {
       if(this.state.player) { return }
-      $.getJSON('/api/guess', this.playerSquares, (response) => {
+      $.getJSON('/api/guess', {squares: JSON.stringify(this.playerSquares)}, (response) => {
         console.log(response);
       });
     });

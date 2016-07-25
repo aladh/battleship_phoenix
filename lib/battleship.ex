@@ -30,7 +30,6 @@ defmodule Battleship do
   def constants do
     %{untouched: 0,
       miss: 1,
-      partial_hit: 2,
       hit: 3,
       placed_ship: 4,
       row_length: 8,
