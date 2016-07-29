@@ -8,11 +8,12 @@ export default class Game extends React.Component {
 
     this.state = {
       currentSquares: [],
-      player: true
+      showingPlayerBoard: true
     }
 
     this.playerSquares = null;
     this.cpuSquares = null;
+    this.playerClicked = false;
 
     this.onContinue = this.onContinue.bind(this)
     this.onClick = this.onClick.bind(this)
@@ -31,11 +32,12 @@ export default class Game extends React.Component {
   }
 
   onContinue() {
+    this.playerClicked = false;
     this.setState((previousState) => {
-      let squares = previousState.player ? this.cpuSquares : this.playerSquares;
-      return {player: !previousState.player, currentSquares: squares}
+      let squares = previousState.showingPlayerBoard ? this.cpuSquares : this.playerSquares;
+      return {showingPlayerBoard: !previousState.showingPlayerBoard, currentSquares: squares}
     }, () => {
-      if(this.state.player) { return }
+      if(this.state.showingPlayerBoard) { return }
       $.getJSON('/api/guess', {squares: JSON.stringify(this.playerSquares)}, (index) => {
         this.processGuess(index)
       });
@@ -52,11 +54,13 @@ export default class Game extends React.Component {
   }
 
   onClick(e) {
-    if(this.state.player == true) { return }
+    if(this.state.showingPlayerBoard == true || this.playerClicked == true) { return }
     let id = $(e.target).data('square-index');
     let square = this.cpuSquares[id];
 
     if(square.status != Game.untouched && square.status != Game.placedShip) { return }
+
+    this.playerClicked = true;
 
     if(square.ship) {
       square.status = Game.hit;
@@ -70,7 +74,7 @@ export default class Game extends React.Component {
   renderCurrentPlayer() {
     return (
       <div className="current-player">
-        {this.state.player ? 'Your Board' : "Computer's Board"}
+        {this.state.showingPlayerBoard ? 'Your Board' : "Computer's Board"}
       </div>
     )
   }
@@ -84,8 +88,8 @@ export default class Game extends React.Component {
           squares={this.state.currentSquares}
           rowLength={this.props.rowLength}
           onClick={this.onClick}
-          hover={!this.state.player}
-          hideShips={!this.state.player}
+          hover={!this.state.showingPlayerBoard && !this.playerClicked}
+          hideShips={!this.state.showingPlayerBoard}
         />
 
         <button onClick={this.onContinue}>
