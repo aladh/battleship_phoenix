@@ -1,10 +1,10 @@
-defmodule Battleship.Mixfile do
+  defmodule Battleship.Mixfile do
   use Mix.Project
 
   def project do
     [app: :battleship,
      version: "0.0.1",
-     elixir: "~> 1.2",
+     elixir: "~> 1.3",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -17,7 +17,7 @@ defmodule Battleship.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Battleship, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext]]
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :poison]]
   end
 
   # Specifies which paths to compile per environment.
@@ -35,6 +35,7 @@ defmodule Battleship.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:mix_test_watch, "~> 0.2", only: :dev},
-     {:poison, "~> 2.0"}]
+     {:poison, "~> 2.0"},
+     {:exrm, "~> 1.0.8"}]
   end
 end
