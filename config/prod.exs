@@ -13,7 +13,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :battleship, Battleship.Endpoint,
   http: [port: 8888],
-  url: [host: "example.com", port: 80],
+  url: [host: "alishan.me", scheme: "https", path: "/battleship", port: 443],
   cache_static_manifest: "priv/static/manifest.json",
   server: true,
   root: ".",
