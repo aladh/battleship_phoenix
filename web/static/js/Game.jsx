@@ -74,7 +74,7 @@ export default class Game extends React.Component {
   renderCurrentPlayer() {
     return (
       <div className="current-player">
-        {this.state.showingPlayerBoard ? 'Your Board' : "Computer's Board"}
+        {this.state.showingPlayerBoard ? 'Your Board' : "Opponent's Board"}
       </div>
     )
   }
