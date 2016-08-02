@@ -21,12 +21,12 @@ export default class Game extends React.Component {
   }
 
   componentWillMount() {
-    $.getJSON('/api/board/new', (response) => {
+    $.getJSON(Game.boardURL, (response) => {
       this.playerSquares = response.squares;
       this.setState({currentSquares: this.playerSquares});
     });
 
-    $.getJSON('/api/board/new', (response) => {
+    $.getJSON(Game.boardURL, (response) => {
       this.cpuSquares = response.squares;
     });
   }
@@ -38,7 +38,7 @@ export default class Game extends React.Component {
       return {showingPlayerBoard: !previousState.showingPlayerBoard, currentSquares: squares}
     }, () => {
       if(this.state.showingPlayerBoard) { return }
-      $.getJSON('/api/guess', {squares: JSON.stringify(this.playerSquares)}, (index) => {
+      $.getJSON(Game.guessURL, {squares: JSON.stringify(this.playerSquares)}, (index) => {
         this.processGuess(index)
       });
     });
@@ -108,3 +108,5 @@ Game.untouched = 0;
 Game.miss = 1;
 Game.hit = 3;
 Game.placedShip = 4;
+Game.boardURL = $('#game').data('board-url');
+Game.guessURL = $('#game').data('guess-url');

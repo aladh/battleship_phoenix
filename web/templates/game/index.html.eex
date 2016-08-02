@@ -1,1 +1,6 @@
-<div id="game"></div>
+<div
+  id="game"
+  data-board-url="<%= board_url(@conn, :new) %>"
+  data-guess-url="<%= guess_url(@conn, :show) %>"
+>
+</div>
