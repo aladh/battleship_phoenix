@@ -1,0 +1,60 @@
+#game {
+  text-align: center;
+  
+  .current-player {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .board {
+    border: 1px solid darkgray;
+    display: inline-block;
+    font-size: 0;
+    padding: 2px;
+
+    .square {
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+      border: 1px solid darkgray;
+
+      &.hover[data-square-status = '0']:hover {
+        opacity: 0.5;
+      }
+
+      &[data-square-status = '0'] {
+        background-color: lightblue;
+      }
+
+      &[data-square-status = '4'] {
+        background-color: black;
+      }
+
+      &[data-square-status = '3'] {
+        background-color: red;
+      }
+
+      &[data-ship-id = '1'] {
+        border: 1px solid orange;
+      }
+
+      &[data-ship-id = '2'] {
+        border: 1px solid blue;
+      }
+
+      &[data-ship-id = '3'] {
+        border: 1px solid green;
+      }
+
+      &[data-ship-id = '4'] {
+        border: 1px solid yellow;
+      }
+    }
+  }
+
+  button {
+    margin-top: 20px !important;
+    height: 60px;
+    width: 300px;
+  }
+}
