@@ -16,20 +16,20 @@ defmodule Battleship.Board do
     |> Battleship.Square.revealed?
   end
 
-  def unrevealed_squares?(%{squares: squares}) do
-     _unrevealed_squares(squares)
+  def unrevealed_square_indices(%{squares: squares}) do
+    _unrevealed_square_indices(squares, 0, [])
   end
 
-  defp _unrevealed_squares([square | rest]) do
+  defp _unrevealed_square_indices([square | rest], index, unrevealed_indices) do
     if Battleship.Square.revealed?(square) do
-      _unrevealed_squares(rest)
+      _unrevealed_square_indices(rest, index + 1, unrevealed_indices)
     else
-      true
+      _unrevealed_square_indices(rest, index + 1, [index | unrevealed_indices])
     end
   end
 
-  defp _unrevealed_squares([]) do
-    false
+  defp _unrevealed_square_indices([], _index, unrevealed_indices) do
+    unrevealed_indices
   end
 
   def place_ship(board, ship, [coord | rest]) do
