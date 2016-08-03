@@ -3,7 +3,7 @@ import $ from "jquery";
 import Board from './Board'
 
 export default class Game extends React.Component {
-  static defaultProps = {rowLength: 8};
+  static rowLength = 8;
   static untouched = 0;
   static miss = 1;
   static hit = 3;
@@ -14,15 +14,10 @@ export default class Game extends React.Component {
   playerSquares = null;
   cpuSquares = null;
   playerClicked = false;
-
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      currentSquares: [],
-      showingPlayerBoard: true
-    }
-  }
+  state = {
+    currentSquares: [],
+    showingPlayerBoard: true
+  };
 
   componentWillMount() {
     $.getJSON(Game.boardURL, (response) => {
@@ -90,7 +85,7 @@ export default class Game extends React.Component {
 
         <Board
           squares={this.state.currentSquares}
-          rowLength={this.props.rowLength}
+          rowLength={Game.rowLength}
           onClick={this.onClick}
           hover={!this.state.showingPlayerBoard && !this.playerClicked}
           hideShips={!this.state.showingPlayerBoard}
