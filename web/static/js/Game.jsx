@@ -1,6 +1,6 @@
-import React from "react"
+import React from "react";
 import $ from "jquery";
-import Board from './Board'
+import Board from './Board';
 
 export default class Game extends React.Component {
   static rowLength = 8;
@@ -11,6 +11,8 @@ export default class Game extends React.Component {
   static boardURL = $('#game').data('board-url');
   static guessURL = $('#game').data('guess-url');
 
+  onContinue = this.onContinue.bind(this);
+  guess = this.guess.bind(this);
   playerSquares = null;
   cpuSquares = null;
   playerClicked = false;
@@ -19,69 +21,51 @@ export default class Game extends React.Component {
     showingPlayerBoard: true
   };
 
-  componentWillMount() {
-    $.getJSON(Game.boardURL, (response) => {
-      this.playerSquares = response.squares;
-      this.setState({currentSquares: this.playerSquares});
-    });
-
-    $.getJSON(Game.boardURL, (response) => {
-      this.cpuSquares = response.squares;
-    });
+  async componentDidMount() {
+    let getSquares = (board) => board.squares;
+    this.playerSquares = getSquares(await $.getJSON(Game.boardURL));
+    this.setState({currentSquares: this.playerSquares});
+    this.cpuSquares = getSquares(await $.getJSON(Game.boardURL));
   }
 
-  onContinue = () => {
+  async onContinue() {
     this.playerClicked = false;
-    this.setState((previousState) => {
+
+    await this.setState((previousState) => {
       let squares = previousState.showingPlayerBoard ? this.cpuSquares : this.playerSquares;
       return {showingPlayerBoard: !previousState.showingPlayerBoard, currentSquares: squares}
-    }, () => {
-      if(this.state.showingPlayerBoard) { return }
-      $.getJSON(Game.guessURL, {squares: JSON.stringify(this.playerSquares)}, (index) => {
-        this.processGuess(index)
-      });
     });
+
+    if (!this.state.showingPlayerBoard) this.guess();
   };
 
-  processGuess = (index) => {
-    let square = this.playerSquares[index];
-    if(square.ship == null) {
-      square.status = Game.miss;
-    } else {
-      square.status = Game.hit;
-    }
+  async guess() {
+    let index = await $.getJSON(Game.guessURL, {squares: JSON.stringify(this.playerSquares)});
+    this.processGuess(this.playerSquares[index])
   };
 
   onClick = (e) => {
-    if(this.state.showingPlayerBoard == true || this.playerClicked == true) { return }
     let id = $(e.target).data('square-index');
     let square = this.cpuSquares[id];
 
-    if(square.status != Game.untouched && square.status != Game.placedShip) { return }
+    if (this.state.showingPlayerBoard == true || this.playerClicked == true) return; // If not the players turn or player already clicked
+    if (square.status != Game.untouched && square.status != Game.placedShip) return; // If square is not eligible to be hit
 
     this.playerClicked = true;
-
-    if(square.ship) {
-      square.status = Game.hit;
-      this.setState({currentSquares: this.cpuSquares})
-    } else {
-      square.status = Game.miss;
-      this.setState({currentSquares: this.cpuSquares})
-    }
+    this.processGuess(square);
+    this.setState({currentSquares: this.cpuSquares})
   };
 
-  renderCurrentPlayer() {
-    return (
-      <div className="current-player">
-        {this.state.showingPlayerBoard ? 'Your Board' : "Opponent's Board"}
-      </div>
-    )
+  processGuess(square) {
+    square.ship == null ? square.status = Game.miss : square.status = Game.hit
   }
 
   render() {
     return(
       <div>
-        {this.renderCurrentPlayer()}
+        <div className="current-player">
+          {this.state.showingPlayerBoard ? 'Your Board' : "Opponent's Board"}
+        </div>
 
         <Board
           squares={this.state.currentSquares}
