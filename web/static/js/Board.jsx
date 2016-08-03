@@ -2,6 +2,13 @@ import React from "react"
 import Game from './Game'
 
 export default class Board extends React.Component {
+  static propTypes = {
+    rowLength: React.PropTypes.number.isRequired,
+    squares: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    onClick: React.PropTypes.func.isRequired,
+    hover: React.PropTypes.bool.isRequired,
+    hideShips: React.PropTypes.bool.isRequired
+  };
 
   endOfRow(cellIndex) {
    return cellIndex % this.props.rowLength == this.props.rowLength - 1;
