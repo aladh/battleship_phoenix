@@ -3,21 +3,25 @@ import $ from "jquery";
 import Board from './Board'
 
 export default class Game extends React.Component {
+  static defaultProps = {rowLength: 8};
+  static untouched = 0;
+  static miss = 1;
+  static hit = 3;
+  static placedShip = 4;
+  static boardURL = $('#game').data('board-url');
+  static guessURL = $('#game').data('guess-url');
+
+  playerSquares = null;
+  cpuSquares = null;
+  playerClicked = false;
+
   constructor(props) {
     super(props);
-
+    
     this.state = {
       currentSquares: [],
       showingPlayerBoard: true
     }
-
-    this.playerSquares = null;
-    this.cpuSquares = null;
-    this.playerClicked = false;
-
-    this.onContinue = this.onContinue.bind(this)
-    this.onClick = this.onClick.bind(this)
-    this.processGuess = this.processGuess.bind(this);
   }
 
   componentWillMount() {
@@ -31,7 +35,7 @@ export default class Game extends React.Component {
     });
   }
 
-  onContinue() {
+  onContinue = () => {
     this.playerClicked = false;
     this.setState((previousState) => {
       let squares = previousState.showingPlayerBoard ? this.cpuSquares : this.playerSquares;
@@ -42,18 +46,18 @@ export default class Game extends React.Component {
         this.processGuess(index)
       });
     });
-  }
+  };
 
-  processGuess(index) {
+  processGuess = (index) => {
     let square = this.playerSquares[index];
     if(square.ship == null) {
       square.status = Game.miss;
     } else {
       square.status = Game.hit;
     }
-  }
+  };
 
-  onClick(e) {
+  onClick = (e) => {
     if(this.state.showingPlayerBoard == true || this.playerClicked == true) { return }
     let id = $(e.target).data('square-index');
     let square = this.cpuSquares[id];
@@ -69,7 +73,7 @@ export default class Game extends React.Component {
       square.status = Game.miss;
       this.setState({currentSquares: this.cpuSquares})
     }
-  }
+  };
 
   renderCurrentPlayer() {
     return (
@@ -99,14 +103,3 @@ export default class Game extends React.Component {
     )
   }
 }
-
-Game.defaultProps = {
-  rowLength: 8
-}
-
-Game.untouched = 0;
-Game.miss = 1;
-Game.hit = 3;
-Game.placedShip = 4;
-Game.boardURL = $('#game').data('board-url');
-Game.guessURL = $('#game').data('guess-url');
