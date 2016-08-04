@@ -15,6 +15,7 @@ import "phoenix_html"
 import React from "react"
 import ReactDOM from "react-dom"
 import "babel-polyfill";
+import $ from "jquery";
 
 // Import local files
 //
@@ -23,6 +24,13 @@ import "babel-polyfill";
 
 // import socket from "./socket"
 
-import Game from "./Game"
+import Game from "./Game";
 
-ReactDOM.render(<Game />, document.getElementById("game"))
+// This seems to be defined upon eval, whereas Game is not (don't know why) TODO: Investigate
+let GameComponent = Game;
+
+let element = $('[data-react-class]')[0];
+let klass = $('[data-react-class]').data('react-class');
+let props = $('[data-react-class]').data('react-props');
+let reactElement = React.createElement(eval(klass), props);
+ReactDOM.render(reactElement, element);

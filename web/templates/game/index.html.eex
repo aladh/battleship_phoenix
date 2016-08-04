@@ -1,6 +1,5 @@
-<div
-  id="game"
-  data-board-url="<%= board_path(@conn, :new) %>"
-  data-guess-url="<%= guess_path(@conn, :show) %>"
->
-</div>
+<%= react_component("GameComponent",
+boardURL: board_path(@conn, :new), guessURL: guess_path(@conn, :show),
+rowLength: Battleship.constants[:row_length], hit: Battleship.constants[:hit],
+miss: Battleship.constants[:miss], untouched: Battleship.constants[:untouched],
+placedShip: Battleship.constants[:placed_ship]) %>

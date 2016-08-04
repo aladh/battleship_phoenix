@@ -3,13 +3,15 @@ import $ from "jquery";
 import Board from './Board';
 
 export default class Game extends React.Component {
-  static rowLength = 8;
-  static untouched = 0;
-  static miss = 1;
-  static hit = 3;
-  static placedShip = 4;
-  static boardURL = $('#game').data('board-url');
-  static guessURL = $('#game').data('guess-url');
+  static propTypes = {
+    boardURL: React.PropTypes.string.isRequired,
+    guessURL: React.PropTypes.string.isRequired,
+    rowLength: React.PropTypes.number.isRequired,
+    untouched: React.PropTypes.number.isRequired,
+    miss: React.PropTypes.number.isRequired,
+    hit: React.PropTypes.number.isRequired,
+    placedShip: React.PropTypes.number.isRequired
+  };
 
   onContinue = this.onContinue.bind(this);
   guess = this.guess.bind(this);
@@ -23,9 +25,9 @@ export default class Game extends React.Component {
 
   async componentDidMount() {
     let getSquares = (board) => board.squares;
-    this.playerSquares = getSquares(await $.getJSON(Game.boardURL));
+    this.playerSquares = getSquares(await $.getJSON(this.props.boardURL));
     this.setState({currentSquares: this.playerSquares});
-    this.cpuSquares = getSquares(await $.getJSON(Game.boardURL));
+    this.cpuSquares = getSquares(await $.getJSON(this.props.boardURL));
   }
 
   async onContinue() {
@@ -40,7 +42,7 @@ export default class Game extends React.Component {
   };
 
   async guess() {
-    let index = await $.getJSON(Game.guessURL, {squares: JSON.stringify(this.playerSquares)});
+    let index = await $.getJSON(this.props.guessURL, {squares: JSON.stringify(this.playerSquares)});
     this.processGuess(this.playerSquares[index])
   };
 
@@ -49,7 +51,7 @@ export default class Game extends React.Component {
     let square = this.cpuSquares[id];
 
     if (this.state.showingPlayerBoard == true || this.playerClicked == true) return; // If not the players turn or player already clicked
-    if (square.status != Game.untouched && square.status != Game.placedShip) return; // If square is not eligible to be hit
+    if (square.status != this.props.untouched && square.status != this.props.placedShip) return; // If square is not eligible to be hit
 
     this.playerClicked = true;
     this.processGuess(square);
@@ -57,7 +59,7 @@ export default class Game extends React.Component {
   };
 
   processGuess(square) {
-    square.ship == null ? square.status = Game.miss : square.status = Game.hit
+    square.ship == null ? square.status = this.props.miss : square.status = this.props.hit
   }
 
   render() {
@@ -69,10 +71,11 @@ export default class Game extends React.Component {
 
         <Board
           squares={this.state.currentSquares}
-          rowLength={Game.rowLength}
+          rowLength={this.props.rowLength}
           onClick={this.onClick}
           hover={!this.state.showingPlayerBoard && !this.playerClicked}
           hideShips={!this.state.showingPlayerBoard}
+          untouched={this.props.untouched}
         />
 
         <button onClick={this.onContinue}>

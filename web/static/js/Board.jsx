@@ -7,7 +7,8 @@ export default class Board extends React.Component {
     squares: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     onClick: React.PropTypes.func.isRequired,
     hover: React.PropTypes.bool.isRequired,
-    hideShips: React.PropTypes.bool.isRequired
+    hideShips: React.PropTypes.bool.isRequired,
+    untouched: React.PropTypes.number.isRequired
   };
 
   endOfRow(cellIndex) {
@@ -24,7 +25,7 @@ export default class Board extends React.Component {
           key={i}
           data-ship-id={(this.props.squares[i].ship != null && !this.props.hideShips)? this.props.squares[i].ship.id : null}
           data-square-index={i}
-          data-square-status={(this.props.hideShips && this.props.squares[i].status == 4) ? Game.untouched : this.props.squares[i].status}
+          data-square-status={(this.props.hideShips && this.props.squares[i].status == 4) ? this.props.untouched : this.props.squares[i].status}
           onClick={this.props.onClick}
         />
       )
