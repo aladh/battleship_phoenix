@@ -1,4 +1,4 @@
-<%= react_component("GameComponent",
+<%= react_component("Game",
 boardURL: board_path(@conn, :new), guessURL: guess_path(@conn, :show),
 rowLength: Battleship.constants[:row_length], hit: Battleship.constants[:hit],
 miss: Battleship.constants[:miss], untouched: Battleship.constants[:untouched],
