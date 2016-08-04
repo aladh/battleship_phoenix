@@ -6,6 +6,6 @@ defmodule Battleship.GameView do
       props
       |> Enum.into(%{})
       |> Poison.encode!
-    raw "<div data-react-class=\"#{class}\" data-react-props=#{json_props} class=\"game\"></div>"
+    raw "<div data-react-class=\"#{class}\" data-react-props=#{json_props}></div>"
   end
 end
