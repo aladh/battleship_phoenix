@@ -21,7 +21,7 @@ export default class Game extends React.Component {
   opponentBoard = this.props.opponentBoard;
   playerClicked = false;
   state = {
-    currentSquares: this.playerBoard,
+    currentBoard: this.playerBoard,
     showingPlayerBoard: true
   };
 
@@ -29,8 +29,8 @@ export default class Game extends React.Component {
     this.playerClicked = false;
 
     await this.setState((previousState) => {
-      let squares = previousState.showingPlayerBoard ? this.opponentBoard : this.playerBoard;
-      return {showingPlayerBoard: !previousState.showingPlayerBoard, currentSquares: squares}
+      let board = previousState.showingPlayerBoard ? this.opponentBoard : this.playerBoard;
+      return {showingPlayerBoard: !previousState.showingPlayerBoard, currentBoard: board}
     });
 
     if (!this.state.showingPlayerBoard) this.guess();
@@ -42,7 +42,7 @@ export default class Game extends React.Component {
   };
 
   onClick = (e) => {
-    let id = $(e.target).data('square-index');
+    let id = e.target.getAttribute('data-board-index');
     let square = this.opponentBoard[id];
 
     if (this.state.showingPlayerBoard == true || this.playerClicked == true) return; // If not the players turn or player already clicked
@@ -50,7 +50,7 @@ export default class Game extends React.Component {
 
     this.playerClicked = true;
     this.processGuess(square);
-    this.setState({currentSquares: this.opponentBoard})
+    this.setState({currentBoard: this.opponentBoard})
   };
 
   processGuess(square) {
@@ -58,19 +58,20 @@ export default class Game extends React.Component {
   }
 
   render() {
-    return(
+    return (
       <div className="game">
         <div className="current-player">
           {this.state.showingPlayerBoard ? 'Your Board' : "Opponent's Board"}
         </div>
 
         <Board
-          squares={this.state.currentSquares}
+          board={this.state.currentBoard}
           rowLength={this.props.rowLength}
           onClick={this.onClick}
           hover={!this.state.showingPlayerBoard && !this.playerClicked}
           hideShips={!this.state.showingPlayerBoard}
           untouched={this.props.untouched}
+          placedShip={this.props.placedShip}
         />
 
         <button onClick={this.onContinue}>

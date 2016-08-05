@@ -4,46 +4,53 @@ import Game from './Game'
 export default class Board extends React.Component {
   static propTypes = {
     rowLength: React.PropTypes.number.isRequired,
-    squares: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    board: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
     onClick: React.PropTypes.func.isRequired,
     hover: React.PropTypes.bool.isRequired,
     hideShips: React.PropTypes.bool.isRequired,
-    untouched: React.PropTypes.number.isRequired
+    untouched: React.PropTypes.number.isRequired,
+    placedShip: React.PropTypes.number.isRequired
   };
+
+  hideShipId(ship) {
+    return this.props.hideShips || ship == null
+  }
+
+  maskSquareStatus(square) {
+    return this.props.hideShips && square.status == this.props.placedShip
+  }
 
   endOfRow(cellIndex) {
    return cellIndex % this.props.rowLength == this.props.rowLength - 1;
   }
 
-  createCellGrid() {
-    let grid = [];
+  createBoard() {
+    let board = [];
 
-    for (var i = 0; i < this.props.squares.length; i++) {
-      let square = (
+    for (var i = 0; i < this.props.board.length; i++) {
+      let square = this.props.board[i];
+      let squareElement = (
         <div
-          className={`square ${this.props.hover ? 'hover' : ''}`}
           key={i}
-          data-ship-id={(this.props.squares[i].ship != null && !this.props.hideShips)? this.props.squares[i].ship.id : null}
-          data-square-index={i}
-          data-square-status={(this.props.hideShips && this.props.squares[i].status == 4) ? this.props.untouched : this.props.squares[i].status}
+          className={`square ${this.props.hover ? 'hover' : ''}`}
           onClick={this.props.onClick}
+          data-ship-id={this.hideShipId(square.ship) ? null : square.ship.id}
+          data-board-index={i}
+          data-square-status={this.maskSquareStatus(square) ? this.props.untouched : square.status}
         />
       )
 
-      grid.push(square);
-
-      if (this.endOfRow(i)) {
-        grid.push(<br key={1000000 + i}/>)
-      }
+      board.push(squareElement);
+      if (this.endOfRow(i)) board.push(<br key={1000000 + i}/>);
     }
 
-    return grid
+    return board
   }
 
   render() {
     return (
       <div className="board">
-        {this.createCellGrid()}
+        {this.createBoard()}
       </div>
     )
   }
