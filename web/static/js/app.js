@@ -2,7 +2,7 @@ import "phoenix_html"
 import React from "react"
 import ReactDOM from "react-dom"
 import "babel-polyfill";
-
+import fetch from "whatwg-fetch";
 import * as Game from "./Game";
 
 document.addEventListener("DOMContentLoaded", () => {

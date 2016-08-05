@@ -6,11 +6,12 @@
     "watch": "brunch watch --stdin"
   },
   "dependencies": {
-    "jquery": "^3.0.0",
     "phoenix": "file:deps/phoenix",
     "phoenix_html": "file:deps/phoenix_html",
     "react": "^15.3.0",
-    "react-dom": "^15.3.0"
+    "react-dom": "^15.3.0",
+    "url-search-params": "^0.5.0",
+    "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
     "babel-brunch": "~6.0.0",
