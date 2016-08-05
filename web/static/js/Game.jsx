@@ -10,31 +10,26 @@ export default class Game extends React.Component {
     untouched: React.PropTypes.number.isRequired,
     miss: React.PropTypes.number.isRequired,
     hit: React.PropTypes.number.isRequired,
-    placedShip: React.PropTypes.number.isRequired
+    placedShip: React.PropTypes.number.isRequired,
+    playerBoard: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    opponentBoard: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
   };
 
   onContinue = this.onContinue.bind(this);
   guess = this.guess.bind(this);
-  playerSquares = null;
-  cpuSquares = null;
+  playerBoard = this.props.playerBoard;
+  opponentBoard = this.props.opponentBoard;
   playerClicked = false;
   state = {
-    currentSquares: [],
+    currentSquares: this.playerBoard,
     showingPlayerBoard: true
   };
-
-  async componentDidMount() {
-    let getSquares = (board) => board.squares;
-    this.playerSquares = getSquares(await $.getJSON(this.props.boardURL));
-    this.setState({currentSquares: this.playerSquares});
-    this.cpuSquares = getSquares(await $.getJSON(this.props.boardURL));
-  }
 
   async onContinue() {
     this.playerClicked = false;
 
     await this.setState((previousState) => {
-      let squares = previousState.showingPlayerBoard ? this.cpuSquares : this.playerSquares;
+      let squares = previousState.showingPlayerBoard ? this.opponentBoard : this.playerBoard;
       return {showingPlayerBoard: !previousState.showingPlayerBoard, currentSquares: squares}
     });
 
@@ -42,20 +37,20 @@ export default class Game extends React.Component {
   };
 
   async guess() {
-    let index = await $.getJSON(this.props.guessURL, {squares: JSON.stringify(this.playerSquares)});
-    this.processGuess(this.playerSquares[index])
+    let index = await $.getJSON(this.props.guessURL, {squares: JSON.stringify(this.playerBoard)});
+    this.processGuess(this.playerBoard[index])
   };
 
   onClick = (e) => {
     let id = $(e.target).data('square-index');
-    let square = this.cpuSquares[id];
+    let square = this.opponentBoard[id];
 
     if (this.state.showingPlayerBoard == true || this.playerClicked == true) return; // If not the players turn or player already clicked
     if (square.status != this.props.untouched && square.status != this.props.placedShip) return; // If square is not eligible to be hit
 
     this.playerClicked = true;
     this.processGuess(square);
-    this.setState({currentSquares: this.cpuSquares})
+    this.setState({currentSquares: this.opponentBoard})
   };
 
   processGuess(square) {
