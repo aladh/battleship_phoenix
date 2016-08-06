@@ -15,3 +15,7 @@ then
 
   MIX_ENV=prod mix release # Generate release
 fi
+
+# mkdir /var/www/battleship/releases/0.0.9
+# cp rel/battleship/releases/0.0.9/battleship.tar.gz /var/www/battleship/releases/0.0.9/
+# /var/www/battleship/bin/battleship upgrade "0.0.9"
