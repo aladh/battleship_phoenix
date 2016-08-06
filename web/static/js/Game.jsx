@@ -36,28 +36,19 @@ export default class Game extends React.Component {
   };
 
   async guess() {
-    let url = this.buildURL(this.props.guessURL, {squares: JSON.stringify(this.playerBoard)});
-    let response = await fetch(url);
+    let options = {
+      method: 'POST',
+      body: this.buildParams({squares: JSON.stringify(this.playerBoard)})
+    };
+    let response = await fetch(this.props.guessURL, options);
     let index = await response.text()
     this.processGuess(this.playerBoard[index])
   };
 
-  buildURL(url, params) {
-    if (typeof url.searchParams == 'undefined') {
-      return this.safariSucks(url, params);
-    } else {
-      var url = new URL(url);
-      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-      return url
-    }
-  }
-
-  safariSucks(url, params) {
-    // safari doesn't have URLSearchParams, and the polyfill doesn't add it to URL's prototype
-    // Need to use URLSearchParams(polyfilled) directly to create query string
+  buildParams(params) {
     let searchParams = new URLSearchParams;
     Object.keys(params).forEach(key => searchParams.append(key, params[key]));
-    return`${url}?${searchParams}`
+    return searchParams
   }
 
   onClick = (e) => {

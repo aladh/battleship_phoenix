@@ -22,7 +22,7 @@ defmodule Battleship.Router do
   # Other scopes may use custom stacks.
   scope "/api", Battleship do
     pipe_through :api
-    get "/guess", GuessController, :show
+    post "/guess", GuessController, :show
     get "/board/new", BoardController, :new
   end
 end
