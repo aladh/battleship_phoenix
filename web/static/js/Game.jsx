@@ -69,6 +69,7 @@ export default class Game extends React.Component {
   };
 
   async processGuess(square, player, callback) {
+    if (this.state.gameOver) return;
     if (square.status == this.props.miss || square.status == this.props.hit) throw "This square has already been revealed";
     let newSquare = {...square};
     square.ship == null ? newSquare.status = this.props.miss : newSquare.status = this.props.hit
@@ -86,26 +87,32 @@ export default class Game extends React.Component {
         [player ? 'playerShips' : 'opponentShips']: newShips
       }
     });
+
+    if (this.state[player ? 'playerShips' : 'opponentShips'].every((ship) => ship.alive == 0)) this.gameOver(player);
     if (!this.state.playerTurn) this.guess()
+  }
+
+  gameOver(player) {
+    this.setState({gameOver: true, playerWon: !player})
   }
 
   immutableReplace(array, elem, index) {
     return [...array.slice(0, index), elem, ...array.slice(index + 1)]
   }
 
-  gameOverMessage() {
-    return this.state.playerWon ? 'You Win!' : 'Opponent Wins'
+  renderHeadline() {
+    if (this.state.gameOver) {
+      return this.state.playerWon ? 'You Win!' : 'Opponent Wins'
+    } else {
+      return this.state.playerTurn ? 'Your Turn' : "Opponent's Turn"
+    }
   }
 
   render() {
     return (
       <div className="game">
-        <div className="game-over">
-          {this.state.gameOver ? this.gameOverMessage() : ''}
-        </div>
-
-        <div className="current-player">
-          {this.state.playerTurn ? 'Your Turn' : "Opponent's Turn"}
+        <div className="headline">
+          {this.renderHeadline()}
         </div>
 
         <Board
