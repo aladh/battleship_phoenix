@@ -62,7 +62,10 @@ export default class Game extends React.Component {
     square.ship == null ? newSquare.status = this.props.miss : newSquare.status = this.props.hit
     await this.setState((previousState) => {
       let newBoard = this.immutableReplace(previousState[player ? 'playerBoard' : 'opponentBoard'], newSquare, square.index);
-      return {[player ? 'playerBoard' : 'opponentBoard']: newBoard, playerTurn: !previousState.playerTurn}
+      return {
+        [player ? 'playerBoard' : 'opponentBoard']: newBoard,
+        playerTurn: !previousState.playerTurn
+      }
     });
     if (!this.state.playerTurn) this.guess()
   }
@@ -74,8 +77,6 @@ export default class Game extends React.Component {
   gameOverMessage() {
     return this.state.playerWon ? 'You Win!' : 'Opponent Wins'
   }
-
-  doNothing() {}
 
   render() {
     return (
@@ -91,12 +92,12 @@ export default class Game extends React.Component {
         <Board
           board={this.state.playerBoard}
           rowLength={this.props.rowLength}
-          onClick={this.doNothing}
           hover={false}
           hideShips={false}
           untouched={this.props.untouched}
           placedShip={this.props.placedShip}
           title="You"
+          ships={this.state.playerShips}
         />
 
         <Board
@@ -108,6 +109,7 @@ export default class Game extends React.Component {
           untouched={this.props.untouched}
           placedShip={this.props.placedShip}
           title="Opponent"
+          ships={this.state.opponentShips}
         />
       </div>
     )

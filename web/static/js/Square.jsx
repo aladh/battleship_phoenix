@@ -3,7 +3,7 @@ import React from 'react';
 const Square = (props) => {
   return (
     <div
-      className={props.className}
+      className={`square ${props.className ? props.className : ''}`}
       onClick={props.onClick}
       data-ship-id={props.shipId}
       data-board-index={props.boardIndex}
@@ -14,10 +14,10 @@ const Square = (props) => {
 
 Square.displayName = 'Square';
 Square.propTypes = {
-  className: React.PropTypes.string.isRequired,
-  onClick: React.PropTypes.func.isRequired,
+  className: React.PropTypes.string,
+  onClick: React.PropTypes.func,
   shipId: React.PropTypes.number,
-  boardIndex: React.PropTypes.number.isRequired,
+  boardIndex: React.PropTypes.number,
   squareStatus: React.PropTypes.number.isRequired,
 }
 

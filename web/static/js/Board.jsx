@@ -1,16 +1,18 @@
-import React from "react"
+import React from "react";
+import Ships from './Ships';
 import Square from './Square';
 
 export default class Board extends React.Component {
   static propTypes = {
     rowLength: React.PropTypes.number.isRequired,
     board: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-    onClick: React.PropTypes.func.isRequired,
+    onClick: React.PropTypes.func,
     hover: React.PropTypes.bool.isRequired,
     hideShips: React.PropTypes.bool.isRequired,
     untouched: React.PropTypes.number.isRequired,
     placedShip: React.PropTypes.number.isRequired,
-    title: React.PropTypes.string.isRequired
+    title: React.PropTypes.string.isRequired,
+    ships: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
   };
 
   hideShipId(ship) {
@@ -34,7 +36,7 @@ export default class Board extends React.Component {
       board.push(
         <Square
           key={i}
-          className={`square ${this.props.hover ? 'hover' : ''}`}
+          className={this.props.hover ? 'hover' : ''}
           onClick={this.props.onClick}
           shipId={this.hideShipId(square.ship) ? null : square.ship.id}
           boardIndex={square.index}
@@ -58,6 +60,8 @@ export default class Board extends React.Component {
         <div className="board">
           {this.createBoard()}
         </div>
+
+        <Ships ships={this.props.ships} />
       </div>
     )
   }
