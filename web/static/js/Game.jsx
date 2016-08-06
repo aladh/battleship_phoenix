@@ -1,6 +1,5 @@
 import React from "react";
 import Board from './Board';
-import URLSearchParams from 'url-search-params'; // Need polyfill for safari
 
 export default class Game extends React.Component {
   static propTypes = {

@@ -2,7 +2,8 @@ import "phoenix_html"
 import React from "react"
 import ReactDOM from "react-dom"
 import "babel-polyfill";
-import fetch from "whatwg-fetch";
+self.URLSearchParams = require('url-search-params'); // Need polyfill for safari
+require("whatwg-fetch"); // import is async but require is sync (depends on URLSearchParams)
 import * as Game from "./Game";
 
 document.addEventListener("DOMContentLoaded", () => {
