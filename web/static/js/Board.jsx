@@ -9,7 +9,8 @@ export default class Board extends React.Component {
     hover: React.PropTypes.bool.isRequired,
     hideShips: React.PropTypes.bool.isRequired,
     untouched: React.PropTypes.number.isRequired,
-    placedShip: React.PropTypes.number.isRequired
+    placedShip: React.PropTypes.number.isRequired,
+    title: React.PropTypes.string.isRequired
   };
 
   hideShipId(ship) {
@@ -49,8 +50,14 @@ export default class Board extends React.Component {
 
   render() {
     return (
-      <div className="board">
-        {this.createBoard()}
+      <div className="board-container">
+        <div className="title">
+          {this.props.title}
+        </div>
+        
+        <div className="board">
+          {this.createBoard()}
+        </div>
       </div>
     )
   }

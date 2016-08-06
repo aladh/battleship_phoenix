@@ -10,38 +10,33 @@ export default class Game extends React.Component {
     hit: React.PropTypes.number.isRequired,
     placedShip: React.PropTypes.number.isRequired,
     playerBoard: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-    opponentBoard: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+    opponentBoard: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+    defaultShips: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
   };
 
-  onContinue = this.onContinue.bind(this);
-  guess = this.guess.bind(this);
-  playerBoard = this.props.playerBoard;
-  opponentBoard = this.props.opponentBoard;
-  playerClicked = false;
   state = {
-    currentBoard: this.playerBoard,
-    showingPlayerBoard: true
+    playerBoard: this.props.playerBoard,
+    opponentBoard: this.props.opponentBoard,
+    playerShips: this.initializeShips(),
+    opponentShips: this.initializeShips(),
+    playerTurn: true,
+    gameOver: false,
+    playerWon: false
   };
+  guess = this.guess.bind(this);
 
-  async onContinue() {
-    this.playerClicked = false;
-
-    await this.setState((previousState) => {
-      let board = previousState.showingPlayerBoard ? this.opponentBoard : this.playerBoard;
-      return {showingPlayerBoard: !previousState.showingPlayerBoard, currentBoard: board}
-    });
-
-    if (!this.state.showingPlayerBoard) this.guess();
-  };
+  initializeShips() {
+    return this.props.defaultShips.map((ship) => {return { ...ship, alive: ship.size}})
+  }
 
   async guess() {
     let options = {
       method: 'POST',
-      body: this.buildParams({squares: JSON.stringify(this.playerBoard)})
+      body: this.buildParams({squares: JSON.stringify(this.state.playerBoard)})
     };
     let response = await fetch(this.props.guessURL, options);
     let index = await response.text()
-    this.processGuess(this.playerBoard[index])
+    this.processGuess(this.state.playerBoard[index], true)
   };
 
   buildParams(params) {
@@ -51,42 +46,69 @@ export default class Game extends React.Component {
   }
 
   onClick = (e) => {
-    let id = e.target.getAttribute('data-board-index');
-    let square = this.opponentBoard[id];
+    if (!this.state.playerTurn) return;
 
-    if (this.state.showingPlayerBoard == true || this.playerClicked == true) return; // If not the players turn or player already clicked
+    let id = e.target.getAttribute('data-board-index');
+    let square = this.state.opponentBoard[id];
+
     if (square.status != this.props.untouched && square.status != this.props.placedShip) return; // If square is not eligible to be hit
 
-    this.playerClicked = true;
-    this.processGuess(square);
-    this.setState({currentBoard: this.opponentBoard})
+    this.processGuess(square, false)
   };
 
-  processGuess(square) {
+  async processGuess(square, player, callback) {
     if (square.status == this.props.miss || square.status == this.props.hit) throw "This square has already been revealed";
-    square.ship == null ? square.status = this.props.miss : square.status = this.props.hit
+    let newSquare = {...square};
+    square.ship == null ? newSquare.status = this.props.miss : newSquare.status = this.props.hit
+    await this.setState((previousState) => {
+      let newBoard = this.immutableReplace(previousState[player ? 'playerBoard' : 'opponentBoard'], newSquare, square.index);
+      return {[player ? 'playerBoard' : 'opponentBoard']: newBoard, playerTurn: !previousState.playerTurn}
+    });
+    if (!this.state.playerTurn) this.guess()
   }
+
+  immutableReplace(array, elem, index) {
+    return [...array.slice(0, index), elem, ...array.slice(index + 1)]
+  }
+
+  gameOverMessage() {
+    return this.state.playerWon ? 'You Win!' : 'Opponent Wins'
+  }
+
+  doNothing() {}
 
   render() {
     return (
       <div className="game">
+        <div className="game-over">
+          {this.state.gameOver ? this.gameOverMessage() : ''}
+        </div>
+
         <div className="current-player">
-          {this.state.showingPlayerBoard ? 'Your Board' : "Opponent's Board"}
+          {this.state.playerTurn ? 'Your Turn' : "Opponent's Turn"}
         </div>
 
         <Board
-          board={this.state.currentBoard}
+          board={this.state.playerBoard}
           rowLength={this.props.rowLength}
-          onClick={this.onClick}
-          hover={!this.state.showingPlayerBoard && !this.playerClicked}
-          hideShips={!this.state.showingPlayerBoard}
+          onClick={this.doNothing}
+          hover={false}
+          hideShips={false}
           untouched={this.props.untouched}
           placedShip={this.props.placedShip}
+          title="You"
         />
 
-        <button onClick={this.onContinue}>
-          Continue
-        </button>
+        <Board
+          board={this.state.opponentBoard}
+          rowLength={this.props.rowLength}
+          onClick={this.onClick}
+          hover={this.state.playerTurn}
+          hideShips={true}
+          untouched={this.props.untouched}
+          placedShip={this.props.placedShip}
+          title="Opponent"
+        />
       </div>
     )
   }
