@@ -15,8 +15,14 @@ export default class Board extends React.Component {
     ships: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
   };
 
-  hideShipId(ship) {
-    return this.props.hideShips || ship == null
+  static contextTypes = {
+    hit: React.PropTypes.number.isRequired,
+    placedShip: React.PropTypes.number.isRequired
+  };
+
+  hideShipId(square) {
+    if (square.status == this.context.hit) return false;
+    return this.props.hideShips || square.ship == null
   }
 
   maskSquareStatus(square) {
@@ -38,7 +44,7 @@ export default class Board extends React.Component {
           key={i}
           className={this.props.hover ? 'hover' : ''}
           onClick={this.props.onClick}
-          shipId={this.hideShipId(square.ship) ? null : square.ship.id}
+          shipId={this.hideShipId(square) ? null : square.ship.id}
           boardIndex={square.index}
           squareStatus={this.maskSquareStatus(square) ? this.props.untouched : square.status}
         />
