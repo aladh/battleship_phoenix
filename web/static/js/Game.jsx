@@ -14,6 +14,11 @@ export default class Game extends React.Component {
     defaultShips: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
   };
 
+  static childContextTypes = {
+    hit: React.PropTypes.number.isRequired,
+    placedShip: React.PropTypes.number.isRequired
+  };
+
   state = {
     playerBoard: this.props.playerBoard,
     opponentBoard: this.props.opponentBoard,
@@ -24,6 +29,13 @@ export default class Game extends React.Component {
     playerWon: false
   };
   guess = this.guess.bind(this);
+
+  getChildContext() {
+    return {
+      hit: this.props.hit,
+      placedShip: this.props.placedShip
+    }
+  }
 
   initializeShips() {
     return this.props.defaultShips.map((ship) => {return { ...ship, alive: ship.size}})

@@ -6,7 +6,12 @@ export default class Ships extends React.Component {
     ships: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
   };
 
-  renderShip(ship) {
+  static contextTypes = {
+    hit: React.PropTypes.number.isRequired,
+    placedShip: React.PropTypes.number.isRequired
+  };
+
+  renderShip = (ship) => {
     let squares = [];
 
     for(var i = 0; i < ship.size; i++) {
@@ -14,7 +19,7 @@ export default class Ships extends React.Component {
         <Square
           key={`${ship.id}-${i}`}
           shipId={ship.id}
-          squareStatus={4}
+          squareStatus={ship.alive > i ? this.context.placedShip : this.context.hit}
         />
       )
     }
