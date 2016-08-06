@@ -1,4 +1,5 @@
 import React from "react"
+import Square from './Square';
 
 export default class Board extends React.Component {
   static propTypes = {
@@ -29,19 +30,19 @@ export default class Board extends React.Component {
 
     for (var i = 0; i < this.props.board.length; i++) {
       let square = this.props.board[i];
-      let squareElement = (
-        <div
+
+      board.push(
+        <Square
           key={i}
           className={`square ${this.props.hover ? 'hover' : ''}`}
           onClick={this.props.onClick}
-          data-ship-id={this.hideShipId(square.ship) ? null : square.ship.id}
-          data-board-index={square.index}
-          data-square-status={this.maskSquareStatus(square) ? this.props.untouched : square.status}
+          shipId={this.hideShipId(square.ship) ? null : square.ship.id}
+          boardIndex={square.index}
+          squareStatus={this.maskSquareStatus(square) ? this.props.untouched : square.status}
         />
-      )
+      );
 
-      board.push(squareElement);
-      if (this.endOfRow(i)) board.push(<br key={1000000 + i}/>);
+      if (this.endOfRow(i)) board.push(<br key={100 + i}/>);
     }
 
     return board
