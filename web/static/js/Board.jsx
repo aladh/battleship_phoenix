@@ -1,5 +1,4 @@
 import React from "react"
-import Game from './Game'
 
 export default class Board extends React.Component {
   static propTypes = {
@@ -54,7 +53,7 @@ export default class Board extends React.Component {
         <div className="title">
           {this.props.title}
         </div>
-        
+
         <div className="board">
           {this.createBoard()}
         </div>
