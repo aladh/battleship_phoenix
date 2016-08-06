@@ -60,11 +60,18 @@ export default class Game extends React.Component {
     if (square.status == this.props.miss || square.status == this.props.hit) throw "This square has already been revealed";
     let newSquare = {...square};
     square.ship == null ? newSquare.status = this.props.miss : newSquare.status = this.props.hit
+    if (newSquare.ship) {
+      let oldShip = this.state[player ? 'playerShips' : 'opponentShips'][newSquare.ship.id - 1]
+      var newShip = {...oldShip, alive: oldShip.alive - 1}
+    }
+
     await this.setState((previousState) => {
       let newBoard = this.immutableReplace(previousState[player ? 'playerBoard' : 'opponentBoard'], newSquare, square.index);
+      let newShips = newSquare.ship ? this.immutableReplace(previousState[player ? 'playerShips' : 'opponentShips'], newShip, newSquare.ship.id - 1) : previousState[player ? 'playerShips' : 'opponentShips']
       return {
         [player ? 'playerBoard' : 'opponentBoard']: newBoard,
-        playerTurn: !previousState.playerTurn
+        playerTurn: !previousState.playerTurn,
+        [player ? 'playerShips' : 'opponentShips']: newShips
       }
     });
     if (!this.state.playerTurn) this.guess()
