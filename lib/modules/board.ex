@@ -2,7 +2,7 @@ defmodule Battleship.Board do
   defstruct squares: [], row_length: Battleship.constants[:row_length]
 
   def new(ships \\ Battleship.constants[:default_ships], row_length \\ Battleship.constants[:row_length]) do
-    squares = for _ <- 0..row_length * row_length - 1, do: %Battleship.Square{}
+    squares = for index <- 0..row_length * row_length - 1, do: %Battleship.Square{index: index}
     Battleship.ShipPlacer.place(%Battleship.Board{squares: squares, row_length: row_length}, ships)
   end
 
@@ -33,7 +33,8 @@ defmodule Battleship.Board do
   end
 
   def place_ship(board, ship, [coord | rest]) do
-    new_squares = List.replace_at(board.squares, index_at_coords(coord, board.row_length), %Battleship.Square{ship: ship, status: Battleship.constants[:placed_ship]})
+    index = index_at_coords(coord, board.row_length)
+    new_squares = List.replace_at(board.squares, index, %Battleship.Square{ship: ship, status: Battleship.constants[:placed_ship], index: index})
     Map.update!(board, :squares, (fn(_) -> new_squares end))
     |> place_ship(ship, rest)
   end

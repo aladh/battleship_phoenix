@@ -35,7 +35,7 @@ export default class Board extends React.Component {
           className={`square ${this.props.hover ? 'hover' : ''}`}
           onClick={this.props.onClick}
           data-ship-id={this.hideShipId(square.ship) ? null : square.ship.id}
-          data-board-index={i}
+          data-board-index={square.index}
           data-square-status={this.maskSquareStatus(square) ? this.props.untouched : square.status}
         />
       )
