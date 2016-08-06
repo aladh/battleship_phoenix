@@ -2,9 +2,17 @@ defmodule Battleship.Targeting do
   def guess(board) do
     unrevealed_indices = Battleship.Board.unrevealed_square_indices(board)
     if length(unrevealed_indices) > 0 do
-      # target_ships = partially_hit_ships(board)
-      random_guess(unrevealed_indices)
+      target_ships = partially_hit_ships(board)
+      if length(target_ships) > 0 do
+        Battleship.Targeting.Proximity.guess(target_ships, board)
+      else
+        random_guess(unrevealed_indices)
+      end
     end
+  end
+
+  defp random_guess(indices) do
+    Enum.random(indices)
   end
 
   defp partially_hit_ships(board) do
@@ -19,8 +27,5 @@ defmodule Battleship.Targeting do
     Battleship.constants.default_ships
     |> Enum.find(&(&1.id == id))
     |> (&(&1.size > length(hit_squares))).()
-  end
-  defp random_guess(indices) do
-    Enum.random(indices)
   end
 end
