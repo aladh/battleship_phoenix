@@ -64,6 +64,7 @@ export default class Game extends React.Component {
   };
 
   processGuess(square) {
+    if (square.status == this.props.miss || square.status == this.props.hit) throw "This square has already been revealed";
     square.ship == null ? square.status = this.props.miss : square.status = this.props.hit
   }
 
