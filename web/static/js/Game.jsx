@@ -16,7 +16,9 @@ export default class Game extends React.Component {
 
   static childContextTypes = {
     hit: React.PropTypes.number.isRequired,
-    placedShip: React.PropTypes.number.isRequired
+    placedShip: React.PropTypes.number.isRequired,
+    untouched: React.PropTypes.number.isRequired,
+    rowLength: React.PropTypes.number.isRequired
   };
 
   state = {
@@ -33,7 +35,9 @@ export default class Game extends React.Component {
   getChildContext() {
     return {
       hit: this.props.hit,
-      placedShip: this.props.placedShip
+      placedShip: this.props.placedShip,
+      untouched: this.props.untouched,
+      rowLength: this.props.rowLength
     }
   }
 
@@ -117,23 +121,17 @@ export default class Game extends React.Component {
 
         <Board
           board={this.state.playerBoard}
-          rowLength={this.props.rowLength}
           hover={false}
           hideShips={false}
-          untouched={this.props.untouched}
-          placedShip={this.props.placedShip}
           title="You"
           ships={this.state.playerShips}
         />
 
         <Board
           board={this.state.opponentBoard}
-          rowLength={this.props.rowLength}
           onClick={this.onClick}
           hover={this.state.playerTurn}
           hideShips={true}
-          untouched={this.props.untouched}
-          placedShip={this.props.placedShip}
           title="Opponent"
           ships={this.state.opponentShips}
         />
