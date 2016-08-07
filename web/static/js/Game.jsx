@@ -131,7 +131,7 @@ export default class Game extends React.Component {
         <Board
           board={this.state.opponentBoard}
           onClick={this.onClick}
-          hover={this.state.playerTurn}
+          hover={!this.state.gameOver && this.state.playerTurn}
           hideShips={true}
           title="Opponent"
           ships={this.state.opponentShips}
