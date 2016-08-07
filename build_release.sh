@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-read -p "Did you bump the version? " -n 1 -r
+read -p "What is the version? " -n 5 -r
 echo
-if [[ $REPLY =~ ^[Yy]$ ]]
+if [[ $REPLY ]]
 then
   git pull # Get latest code (dependencies: git, already cloned repo)
 
@@ -14,8 +14,8 @@ then
   MIX_ENV=prod mix phoenix.digest # Add digest to compiled assets
 
   MIX_ENV=prod mix release # Generate release
-fi
 
-# mkdir /var/www/battleship/releases/0.0.9
-# cp rel/battleship/releases/0.0.9/battleship.tar.gz /var/www/battleship/releases/0.0.9/
-# /var/www/battleship/bin/battleship upgrade "0.0.9"
+  mkdir /var/www/battleship/releases/$REPLY
+  cp rel/battleship/releases/$REPLY/battleship.tar.gz /var/www/battleship/releases/$REPLY/
+  /var/www/battleship/bin/battleship upgrade "$REPLY"
+fi
