@@ -13,6 +13,6 @@ MIX_ENV=prod mix phoenix.digest # Add digest to compiled assets
 
 MIX_ENV=prod mix release # Generate release
 
-mkdir /var/www/battleship/releases/$version
-cp rel/battleship/releases/$version/battleship.tar.gz /var/www/battleship/releases/$version/
+mkdir "/var/www/battleship/releases/$version"
+cp "rel/battleship/releases/$version/battleship.tar.gz" "/var/www/battleship/releases/$version/"
 /var/www/battleship/bin/battleship upgrade "$version"
