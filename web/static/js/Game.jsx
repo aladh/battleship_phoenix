@@ -125,19 +125,16 @@ export default class Game extends React.Component {
 
   renderHeadline() {
     if (this.state.gameOver) {
-      return this.state.playerWon ? 'You Win!' : 'Opponent Wins'
+      return (
+        <span>
+          {this.state.playerWon ? 'You Win! ' : 'Opponent Wins. '}
+          <a onClick={this.resetGame}>
+            Play again?
+          </a>
+        </span>
+      )
     } else {
       return this.state.playerTurn ? 'Your Turn' : "Opponent's Turn"
-    }
-  }
-
-  renderResetButton() {
-    if (this.state.gameOver) {
-      return (
-        <button onClick={this.resetGame}>
-          Reset Game
-        </button>
-      )
     }
   }
 
@@ -164,8 +161,6 @@ export default class Game extends React.Component {
           title="Opponent"
           ships={this.state.opponentShips}
         />
-
-      {this.renderResetButton()}
       </div>
     )
   }
