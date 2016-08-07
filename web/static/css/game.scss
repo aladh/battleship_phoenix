@@ -4,6 +4,10 @@
   .headline {
     font-size: 20px;
     margin-bottom: 20px;
+
+    @media(max-height: 800px) {
+      margin-bottom: 15px;;
+    }
   }
 
   .board-container {
@@ -16,19 +20,19 @@
 
     .board {
       font-size: 0;
-      margin: 10px 50px;
-      @media(max-width: 500px) {
-        margin: 10px auto;
+      margin: 10px 60px 15px;
+      @media(max-width: 1050px) {
+        margin: 10px 20px;
       }
     }
 
     .ships {
-      padding: 0 150px;
       text-align: left;
+      margin: 10px 60px 0;
 
-      @media(max-width: 500px) {
-        padding: 0;
-        margin-bottom: 30px;
+
+      @media(max-width: 1050px) {
+        margin: 10px 20px 30px;
       }
     }
 
@@ -38,9 +42,19 @@
       height: 50px;
       border: 1px solid darkgray;
 
+      @media(max-height: 800px) {
+        height: 45px;
+        width: 45px;
+      }
+
       @media(max-width: 500px) {
         height: 35px;
         width: 35px;
+      }
+
+      @media(min-width: 1230px) and (min-height: 920px) {
+        height: 60px;
+        width: 60px;
       }
 
       &.hover[data-square-status = '0']:hover {

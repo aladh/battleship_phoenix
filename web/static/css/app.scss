@@ -1,0 +1,16 @@
+/* This file is for your main application css. */
+
+nav {
+  text-align: center;
+  font-weight: bold;
+  font-size: 32px;
+  padding: 5px;
+}
+
+.header {
+  margin-bottom: 20px;
+
+  @media(max-height: 800px) {
+    margin-bottom: 15px;
+  }
+}
