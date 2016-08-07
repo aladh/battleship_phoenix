@@ -2,8 +2,6 @@
 
 git pull # Get latest code (dependencies: git, already cloned repo)
 
-version=$(mix run -e 'IO.puts Mix.Project.config[:version]')
-
 mix deps.get --only prod # Get prod dependencies (dependencies: erlang, elixir)
 MIX_ENV=prod mix compile # Compile code
 
@@ -12,6 +10,9 @@ brunch build --production # Compile static assets for prod (dependencies: brunch
 MIX_ENV=prod mix phoenix.digest # Add digest to compiled assets
 
 MIX_ENV=prod mix release # Generate release
+
+version=$(mix run -e 'IO.puts Mix.Project.config[:version]')
+echo "Upgrading to $version..."
 
 mkdir "/var/www/battleship/releases/$version"
 cp "rel/battleship/releases/$version/battleship.tar.gz" "/var/www/battleship/releases/$version/"
