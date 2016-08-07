@@ -27,8 +27,8 @@
       </main>
 
     </div> <!-- /container -->
-    
-    <%= if Mix.env == :prod do %>
+
+    <%= if render_analytics do %>
       <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -37,6 +37,10 @@
 
         ga('create', 'UA-82064761-1', 'auto');
         ga('send', 'pageview');
+      </script>
+    <% else %>
+      <script>
+        window.ga = function(send, event, category, action) {console.log('ga event ' + category + ' ' + action)}
       </script>
     <% end %>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
