@@ -96,8 +96,9 @@ export default class Game extends React.Component {
     if (!this.state.playerTurn) this.guess()
   }
 
-  gameOver(player) {
-    this.setState({gameOver: true, playerWon: !player})
+  async gameOver(player) {
+    await this.setState({gameOver: true, playerWon: !player})
+    ga('send', 'event', 'Game', `${this.state.playerWon ? 'player': 'opponent'}_win`)
   }
 
   immutableReplace(array, elem, index) {
