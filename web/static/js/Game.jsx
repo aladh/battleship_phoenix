@@ -4,6 +4,7 @@ import Board from './Board';
 export default class Game extends React.Component {
   static propTypes = {
     guessURL: React.PropTypes.string.isRequired,
+    boardURL: React.PropTypes.string.isRequired,
     rowLength: React.PropTypes.number.isRequired,
     untouched: React.PropTypes.number.isRequired,
     miss: React.PropTypes.number.isRequired,
@@ -21,16 +22,9 @@ export default class Game extends React.Component {
     rowLength: React.PropTypes.number.isRequired
   };
 
-  state = {
-    playerBoard: this.props.playerBoard,
-    opponentBoard: this.props.opponentBoard,
-    playerShips: this.initializeShips(),
-    opponentShips: this.initializeShips(),
-    playerTurn: true,
-    gameOver: false,
-    playerWon: false
-  };
+  state = this.initalState(this.props.playerBoard, this.props.opponentBoard);
   guess = this.guess.bind(this);
+  resetGame = this.resetGame.bind(this);
 
   getChildContext() {
     return {
@@ -43,6 +37,18 @@ export default class Game extends React.Component {
 
   initializeShips() {
     return this.props.defaultShips.map((ship) => {return { ...ship, alive: ship.size}})
+  }
+
+  initalState(playerBoard, opponentBoard) {
+    return {
+      playerBoard: playerBoard,
+      opponentBoard: opponentBoard,
+      playerShips: this.initializeShips(),
+      opponentShips: this.initializeShips(),
+      playerTurn: true,
+      gameOver: false,
+      playerWon: false
+    }
   }
 
   async guess() {
@@ -59,6 +65,12 @@ export default class Game extends React.Component {
     let searchParams = new URLSearchParams;
     Object.keys(params).forEach(key => searchParams.append(key, params[key]));
     return searchParams
+  }
+
+  async getNewBoard() {
+    let response = await fetch(this.props.boardURL);
+    let board = await response.json();
+    return board.squares
   }
 
   onClick = (e) => {
@@ -105,11 +117,27 @@ export default class Game extends React.Component {
     return [...array.slice(0, index), elem, ...array.slice(index + 1)]
   }
 
+  async resetGame() {
+    let playerBoard = await this.getNewBoard();
+    let opponentBoard = await this.getNewBoard();
+    this.setState({...this.initalState(playerBoard, opponentBoard)})
+  }
+
   renderHeadline() {
     if (this.state.gameOver) {
       return this.state.playerWon ? 'You Win!' : 'Opponent Wins'
     } else {
       return this.state.playerTurn ? 'Your Turn' : "Opponent's Turn"
+    }
+  }
+
+  renderResetButton() {
+    if (this.state.gameOver) {
+      return (
+        <button onClick={this.resetGame}>
+          Reset Game
+        </button>
+      )
     }
   }
 
@@ -136,6 +164,8 @@ export default class Game extends React.Component {
           title="Opponent"
           ships={this.state.opponentShips}
         />
+
+      {this.renderResetButton()}
       </div>
     )
   }

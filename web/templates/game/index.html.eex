@@ -1,6 +1,6 @@
 <%= react_component "Game",
-guessURL: guess_url(@conn, :show), rowLength: Battleship.constants[:row_length],
-hit: Battleship.constants[:hit], miss: Battleship.constants[:miss],
-untouched: Battleship.constants[:untouched], placedShip: Battleship.constants[:placed_ship],
-playerBoard: Battleship.Board.new.squares, opponentBoard: Battleship.Board.new.squares,
-defaultShips: Battleship.constants.default_ships %>
+guessURL: guess_url(@conn, :show), boardURL: board_url(@conn, :new),
+rowLength: Battleship.constants[:row_length], hit: Battleship.constants[:hit],
+miss: Battleship.constants[:miss], untouched: Battleship.constants[:untouched],
+placedShip: Battleship.constants[:placed_ship], playerBoard: Battleship.Board.new.squares,
+opponentBoard: Battleship.Board.new.squares, defaultShips: Battleship.constants.default_ships %>
