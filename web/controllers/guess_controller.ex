@@ -1,9 +1,11 @@
 defmodule Battleship.GuessController do
   use Battleship.Web, :controller
 
-  def show(conn, params) do
-    index = %Battleship.Board{squares: Poison.decode!(params["squares"], keys: :atoms!)}
-    |> Battleship.Targeting.guess
-    json conn, index
+  def show(conn, %{"squares" => squares}) do
+    guess_index =
+      %Battleship.Board{squares: Poison.decode!(squares, keys: :atoms!)}
+      |> Battleship.Targeting.guess
+
+    json conn, guess_index
   end
 end
