@@ -121,6 +121,7 @@ export default class Game extends React.Component {
     let playerBoard = await this.getNewBoard();
     let opponentBoard = await this.getNewBoard();
     this.setState({...this.initalState(playerBoard, opponentBoard)})
+    ga('send', 'event', 'Game', 'reset')
   }
 
   renderHeadline() {
