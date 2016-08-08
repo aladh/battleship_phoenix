@@ -58,7 +58,7 @@
       }
 
       &.hover[data-square-status = '0']:hover {
-        opacity: 0.5;
+        background-color: lighten(skyblue, 10%);
       }
 
       &[data-square-status = '0'] {
@@ -89,11 +89,5 @@
         border: 1px solid yellow;
       }
     }
-  }
-
-  button {
-    height: 80px;
-    width: 250px;
-    margin: 50px 30% 0;
   }
 }
