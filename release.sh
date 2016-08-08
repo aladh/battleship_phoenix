@@ -2,7 +2,7 @@
 
 git pull # Get latest code (dependencies: git, already cloned repo)
 
-mix deps.get --only prod # Get prod dependencies (dependencies: erlang, elixir)
+mix deps.get # Get prod dependencies (dependencies: erlang, elixir)
 MIX_ENV=prod mix compile # Compile code
 
 npm install # Get js dependencies (dev for bruch and prod for assets) (dependencies: nodejs, npm)
