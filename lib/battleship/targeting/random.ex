@@ -1,6 +1,7 @@
 defmodule Battleship.Targeting.Random do
   def guess(indices, board) when length(indices) > 1 do
     IO.puts "Random guess"
+    length_of_biggest_healthy_ship(board)
     shuffled_indices = Enum.shuffle(indices)
     [index | other_indices] = shuffled_indices
     if valid_guess?(index, board) do
@@ -15,6 +16,10 @@ defmodule Battleship.Targeting.Random do
   def guess([], _board), do: nil
 
   defp valid_guess?(index, %{squares: squares}) do
+    any_neighbours_revealed?(index, squares)
+  end
+
+  def any_neighbours_revealed?(index, squares) do
     index
     |> neighbour_indices
     |> Enum.map(&(Enum.at(squares, &1)))
@@ -30,6 +35,19 @@ defmodule Battleship.Targeting.Random do
       lower_neighbour(index)
     ]
     |> Enum.reject(&(&1 == nil))
+  end
+
+  defp length_of_biggest_healthy_ship(%{squares: squares}) do
+    healthy_ship_ids =
+      squares
+      |> Enum.filter(&(&1.status == Battleship.constants.placed_ship))
+      |> Enum.group_by(&(&1.ship.id))
+      |> Map.keys
+
+    Enum.filter(Battleship.constants.default_ships, &(Enum.member?(healthy_ship_ids, &1.id)))
+    |> Enum.max_by(&(&1.size))
+    |> Map.fetch!(:size)
+    |> IO.inspect
   end
 
   defp upper_neighbour(index) do

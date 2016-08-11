@@ -10,8 +10,8 @@ defmodule Battleship.Targeting do
     end
   end
 
-  defp partially_hit_ships(board) do
-    board.squares
+  defp partially_hit_ships(%{squares: squares}) do
+    squares
     |> Enum.filter(&(&1.status == Battleship.constants.hit))
     |> Enum.group_by(&(&1.ship.id))
     |> Enum.map(fn({id, hit_squares}) -> if ship_alive?(id, hit_squares), do: hit_squares end)
