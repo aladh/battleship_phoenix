@@ -118,8 +118,7 @@ export default class Game extends React.Component {
   }
 
   async resetGame() {
-    let playerBoard = await this.getNewBoard();
-    let opponentBoard = await this.getNewBoard();
+    let [playerBoard, opponentBoard] = await Promise.all([await this.getNewBoard(), await this.getNewBoard()]);
     this.setState({...this.initalState(playerBoard, opponentBoard)})
     ga('send', 'event', 'Game', 'reset')
   }
