@@ -5,6 +5,10 @@
     font-size: 22px;
     margin-bottom: 20px;
 
+    a {
+      font-weight: bold;
+    }
+
     @media(max-height: 800px) {
       margin-bottom: 15px;;
     }
