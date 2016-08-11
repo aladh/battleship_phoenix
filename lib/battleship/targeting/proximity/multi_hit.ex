@@ -13,7 +13,6 @@ defmodule Battleship.Targeting.Proximity.MultiHit do
   end
 
   defp vertical_layout?(squares) do
-    IO.inspect squares
     index_difference = Enum.at(squares, 0).index - Enum.at(squares, 1).index
     |> abs
     IO.inspect index_difference

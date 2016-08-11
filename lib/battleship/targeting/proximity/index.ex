@@ -13,9 +13,9 @@ defmodule Battleship.Targeting.Proximity.Index do
     if valid_guess?(guess_index, board), do: guess_index
   end
 
-  defp first_in_row(index), do: rem(index, 8) == 0
+  defp first_in_row(index), do: rem(index, Battleship.constants.row_length) == 0
 
-  defp last_in_row(index), do: rem(index + 1, 8) == 0
+  defp last_in_row(index), do: rem(index + 1, Battleship.constants.row_length) == 0
 
   defp valid_guess?(index, board) do
     revealed = Enum.at(board.squares, index)
