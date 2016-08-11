@@ -1,13 +1,12 @@
 defmodule Battleship.Targeting.Random do
-  def guess(unrevealed_indices, board) when length(unrevealed_indices) > 1 do
+  def guess(indices, board) when length(indices) > 1 do
     IO.puts "Random guess"
-
-    index = Enum.random(unrevealed_indices)
+    shuffled_indices = Enum.shuffle(indices)
+    [index | other_indices] = shuffled_indices
     if valid_guess?(index, board) do
       index
     else
-      new_indices = Enum.reject(unrevealed_indices, &(&1 == index))
-      guess(new_indices, board)
+      guess(other_indices, board)
     end
   end
 
@@ -15,13 +14,15 @@ defmodule Battleship.Targeting.Random do
 
   def guess([], _board), do: nil
 
-  defp valid_guess?(index, board) do
-    IO.inspect neighbour_indices(index)
-    true
+  defp valid_guess?(index, %{squares: squares}) do
+    index
+    |> neighbour_indices
+    |> Enum.map(&(Enum.at(squares, &1)))
+    |> Enum.any?(&(Battleship.Square.revealed?(&1)))
+    |> (&(!&1)).()
   end
 
   def neighbour_indices(index) do
-    IO.inspect index
     [
       left_neighbour(index),
       right_neighbour(index),
