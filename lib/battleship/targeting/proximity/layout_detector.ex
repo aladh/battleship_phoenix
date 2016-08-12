@@ -1,4 +1,4 @@
-defmodule Battleship.Targeting.Proximity.MultiHit do
+defmodule Battleship.Targeting.Proximity.LayoutDetector do
   def guess(ship_squares, board) do
     IO.puts "MultiHit"
     Battleship.Targeting.Proximity.Ship.guess(ship_squares, board, direction: direction(ship_squares))
