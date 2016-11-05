@@ -8,7 +8,8 @@ npm install # Get js dependencies (dev for bruch and prod for assets) (dependenc
 brunch build --production # Compile static assets for prod (dependencies: brunch(globally installed))
 MIX_ENV=prod mix phoenix.digest # Add digest to compiled assets
 
-MIX_ENV=prod mix do compile, release # Compile and release
+MIX_ENV=prod mix compile # Compile
+MIX_ENV=prod mix release --env=prod --upgrade # Generate release
 
 version=$(mix run -e 'IO.puts Mix.Project.config[:version]') # Get version
 version=$(echo $version | grep -o '\S*$') # Ignore compile messages

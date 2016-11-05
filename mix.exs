@@ -40,6 +40,6 @@
      {:cowboy, "~> 1.0"},
      {:mix_test_watch, "~> 0.2", only: :dev},
      {:poison, "~> 2.0"},
-     {:exrm, "~> 1.0.8"}]
+     {:distillery, "~> 0.10"}]
   end
 end
