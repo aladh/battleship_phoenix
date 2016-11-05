@@ -144,15 +144,7 @@ export default class Game extends React.Component {
         <div className="headline">
           {this.renderHeadline()}
         </div>
-
-        <Board
-          board={this.state.playerBoard}
-          hover={false}
-          hideShips={false}
-          title="You"
-          ships={this.state.playerShips}
-        />
-
+        
         <Board
           board={this.state.opponentBoard}
           onClick={this.onClick}
@@ -160,6 +152,14 @@ export default class Game extends React.Component {
           hideShips={true}
           title="Opponent"
           ships={this.state.opponentShips}
+        />
+
+        <Board
+          board={this.state.playerBoard}
+          hover={false}
+          hideShips={false}
+          title="You"
+          ships={this.state.playerShips}
         />
       </div>
     )
