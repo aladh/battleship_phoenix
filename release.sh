@@ -11,6 +11,8 @@ MIX_ENV=prod mix phoenix.digest # Add digest to compiled assets
 SERVER=1 MIX_ENV=prod mix do compile, release # Compile and release
 
 version=$(mix run -e 'IO.puts Mix.Project.config[:version]')
+version=$(echo $version | grep -o '\S*$')
+
 echo "Upgrading to $version..."
 
 mkdir "/var/www/battleship/releases/$version"
