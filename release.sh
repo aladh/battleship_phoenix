@@ -8,7 +8,7 @@ npm install # Get js dependencies (dev for bruch and prod for assets) (dependenc
 brunch build --production # Compile static assets for prod (dependencies: brunch(globally installed))
 MIX_ENV=prod mix phoenix.digest # Add digest to compiled assets
 
-MIX_ENV=prod mix do compile, release # Compile and release
+SERVER=1 MIX_ENV=prod mix do compile, release # Compile and release
 
 version=$(MIX_ENV=prod mix run -e 'IO.puts Mix.Project.config[:version]')
 echo "Upgrading to $version..."
