@@ -7,7 +7,7 @@ defmodule Battleship.Targeting do
       Battleship.Targeting.Proximity.guess(target_ships, board)
     else
       Battleship.Targeting.Hunt.guess(board)
-      Battleship.Targeting.Random.guess(unrevealed_indices, board)
+      # Battleship.Targeting.Random.guess(unrevealed_indices, board)
     end
   end
 

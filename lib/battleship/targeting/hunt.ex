@@ -5,8 +5,20 @@ defmodule Battleship.Targeting.Hunt do
 
     probabilities =
       (for index <- 0..board.row_length * board.row_length - 1, do: 0)
-      |> increment_probabilities(board, 4)
-      |> IO.inspect
+      |> sum_probabilities(board, healthy_ships(board))
+
+    IO.inspect probabilities
+
+    max = Enum.max(probabilities)
+
+    index = Enum.find_index(probabilities, &(&1 == max))
+
+    IO.puts "Guess #{index}"
+    index
+  end
+
+  defp sum_probabilities(probabilities, board, healthy_ships) do
+    Enum.reduce(healthy_ships, probabilities, &(increment_probabilities(&2, board, &1.size)))
   end
 
   defp increment_probabilities(probabilities, board, size) do
@@ -15,12 +27,10 @@ defmodule Battleship.Targeting.Hunt do
   end
 
   defp calculate_probabilities(board, size) do
-    for x <- 1..board.row_length, y <- 1..board.row_length do
+    for y <- 1..board.row_length, x <- 1..board.row_length do
       probability = 0
       if valid_placement?(board, size, {x, y}, :horizontal), do: probability = probability + 1
       if valid_placement?(board, size, {x, y}, :vertical), do: probability = probability + 1
-      IO.inspect {x, y}
-      IO.inspect probability
       probability
     end
   end
