@@ -6,6 +6,7 @@ defmodule Battleship.Targeting do
     if length(target_ships) > 0 do
       Battleship.Targeting.Proximity.guess(target_ships, board)
     else
+      Battleship.Targeting.Hunt.guess(board)
       Battleship.Targeting.Random.guess(unrevealed_indices, board)
     end
   end
