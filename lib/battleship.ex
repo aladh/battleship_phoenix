@@ -33,10 +33,11 @@ defmodule Battleship do
       hit: 3,
       placed_ship: 4,
       row_length: 10,
-      default_ships: [%Battleship.Ship{name: "Battleship", size: 4, id: 1},
-                      %Battleship.Ship{name: "Submarine", size: 3, id: 2},
-                      %Battleship.Ship{name: "Destroyer", size: 2, id: 3},
-                      %Battleship.Ship{name: "Destroyer", size: 2, id: 4}]
+      default_ships: [%Battleship.Ship{name: "Aircraft_Carrier", size: 5, id: 1},
+                      %Battleship.Ship{name: "Battleship", size: 4, id: 2},
+                      %Battleship.Ship{name: "Submarine", size: 3, id: 3},
+                      %Battleship.Ship{name: "Cruiser", size: 3, id: 4},
+                      %Battleship.Ship{name: "Destroyer", size: 2, id: 5}]
     }
   end
 end
