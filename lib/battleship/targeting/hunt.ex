@@ -9,7 +9,7 @@ defmodule Battleship.Targeting.Hunt do
 
     IO.inspect probabilities
 
-    {coords, _value} = Enum.max_by(probabilities, fn {k, v} -> v end)
+    {coords, _value} = Enum.max_by(probabilities, fn {_k, v} -> v end)
 
     index = Battleship.Board.index_at_coords(coords)
 
