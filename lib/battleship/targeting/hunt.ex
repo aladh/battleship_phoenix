@@ -4,35 +4,55 @@ defmodule Battleship.Targeting.Hunt do
     IO.inspect healthy_ships(board)
 
     probabilities =
-      (for index <- 0..board.row_length * board.row_length - 1, do: 0)
-      |> sum_probabilities(board, healthy_ships(board))
+      initialize_probabilities(board.row_length)
+      |> increment_probabilities(healthy_ships(board), board)
 
     IO.inspect probabilities
 
-    max = Enum.max(probabilities)
+    {coords, _value} = Enum.max_by(probabilities, fn {k, v} -> v end)
 
-    index = Enum.find_index(probabilities, &(&1 == max))
+    index = Battleship.Board.index_at_coords(coords)
 
     IO.puts "Guess #{index}"
     index
   end
 
-  defp sum_probabilities(probabilities, board, healthy_ships) do
-    Enum.reduce(healthy_ships, probabilities, &(increment_probabilities(&2, board, &1.size)))
+  defp increment_probabilities(probabilities, [], _board), do: probabilities
+
+  defp increment_probabilities(probabilities, [ship | rest], board) do
+    new_probabilities = Map.merge(probabilities, ship_probabilities(board, ship.size), fn(_k, v1, v2) -> v1 + v2 end)
+    increment_probabilities(new_probabilities, rest, board)
   end
 
-  defp increment_probabilities(probabilities, board, size) do
-    calculated_probabilities = calculate_probabilities(board, size)
-    for i <- 0..Enum.count(probabilities) - 1, do: Enum.at(probabilities, i) + Enum.at(calculated_probabilities, i)
+  defp ship_probabilities(board, size) do
+    initial_probabilities = initialize_probabilities(board.row_length)
+
+    Enum.reduce(Map.keys(initial_probabilities), initial_probabilities, fn(coords = {x, y}, probabilities) ->
+      horizontal_probabilities =
+        if valid_placement?(board, size, coords, :horizontal) do
+          Enum.reduce(Enum.to_list(0..size - 1), %{}, fn(distance, p) ->
+            Map.update(p, {x + distance, y}, 1, &(&1 + 1))
+          end)
+        else
+          %{}
+        end
+
+      vertical_probabilities =
+        if valid_placement?(board, size, {x, y}, :vertical) do
+          Enum.reduce(Enum.to_list(0..size - 1), %{}, fn(distance, p) ->
+            Map.update(p, {x, y + distance}, 1, &(&1 + 1))
+          end)
+        else
+          %{}
+        end
+
+      merged_probabilities = Map.merge(vertical_probabilities, horizontal_probabilities, fn(_k, v1, v2) -> v1 + v2 end)
+      Map.merge(probabilities, merged_probabilities, fn(_k, v1, v2) -> v1 + v2 end)
+    end)
   end
 
-  defp calculate_probabilities(board, size) do
-    for y <- 1..board.row_length, x <- 1..board.row_length do
-      probability = 0
-      if valid_placement?(board, size, {x, y}, :horizontal), do: probability = probability + 1
-      if valid_placement?(board, size, {x, y}, :vertical), do: probability = probability + 1
-      probability
-    end
+  defp initialize_probabilities(row_length) do
+    for y <- 1..row_length, x <- 1..row_length, do: {{x,y}, 0}, into: %{}
   end
 
   defp valid_placement?(board, size, coords, direction) do
