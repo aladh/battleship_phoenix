@@ -1,5 +1,4 @@
 import React from "react";
-import Ships from './Ships';
 import Square from './Square';
 
 export default class Board extends React.Component {
@@ -32,6 +31,13 @@ export default class Board extends React.Component {
    return cellIndex % this.context.rowLength == this.context.rowLength - 1;
   }
 
+  deadShip(square) {
+    if(!square.ship) return false;
+
+    let ship = this.props.ships.find(({id}) => id == square.ship.id)
+    return ship.alive > 0 ? false : true;
+  }
+
   createBoard() {
     let board = [];
 
@@ -44,6 +50,7 @@ export default class Board extends React.Component {
           className={this.props.hover ? 'hover' : ''}
           onClick={this.props.onClick}
           shipId={this.hideShipId(square) ? null : square.ship.id}
+          deadShip={this.deadShip(square)}
           boardIndex={square.index}
           squareStatus={this.maskSquareStatus(square) ? this.context.untouched : square.status}
         />
@@ -65,8 +72,6 @@ export default class Board extends React.Component {
         <div className="board">
           {this.createBoard()}
         </div>
-
-        <Ships ships={this.props.ships} />
       </div>
     )
   }

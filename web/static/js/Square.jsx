@@ -8,6 +8,7 @@ const Square = (props) => {
       data-ship-id={props.shipId}
       data-board-index={props.boardIndex}
       data-square-status={props.squareStatus}
+      data-dead-ship={props.deadShip}
     />
   )
 }
@@ -19,6 +20,7 @@ Square.propTypes = {
   shipId: React.PropTypes.number,
   boardIndex: React.PropTypes.number,
   squareStatus: React.PropTypes.number.isRequired,
+  deadShip: React.PropTypes.bool.isRequired
 }
 
 export default Square;

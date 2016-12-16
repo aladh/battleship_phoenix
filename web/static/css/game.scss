@@ -77,20 +77,8 @@
         background-color: lightcoral;
       }
 
-      &[data-ship-id = '1'] {
-        border: 1px solid purple;
-      }
-
-      &[data-ship-id = '2'] {
-        border: 1px solid aqua;
-      }
-
-      &[data-ship-id = '3'] {
-        border: 1px solid limegreen;
-      }
-
-      &[data-ship-id = '4'] {
-        border: 1px solid yellow;
+      &[data-dead-ship = 'true'] {
+        background-color: grey;
       }
     }
   }
