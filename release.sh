@@ -4,7 +4,7 @@ git pull # Get latest code (dependencies: git, already cloned repo)
 
 mix deps.get # Get all dependencies (prod + dev so version can be obtained) (dependencies: erlang, elixir)
 
-npm install # Get js dependencies (dev for bruch and prod for assets) (dependencies: nodejs, npm)
+yarn # Get js dependencies (dev for bruch and prod for assets) (dependencies: nodejs, yarn globally installed)
 brunch build --production # Compile static assets for prod (dependencies: brunch(globally installed))
 MIX_ENV=prod mix phoenix.digest # Add digest to compiled assets
 
