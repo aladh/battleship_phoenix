@@ -8,7 +8,7 @@
 
     [app: :battleship,
      version: "1.0.0-#{commit_num}-#{git_sha}",
-     elixir: "~> 1.4",
+     elixir: "~> 1.5",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
