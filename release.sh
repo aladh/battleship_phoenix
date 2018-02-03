@@ -2,6 +2,9 @@
 
 git pull # Get latest code (dependencies: git, already cloned repo)
 
+mix local.hex --force # Ensure hex is installed
+mix local.rebar --force # Ensure rebar is installed (dependency of phoenix)
+
 mix deps.get # Get all dependencies (prod + dev so version can be obtained) (dependencies: erlang, elixir)
 
 yarn # Get js dependencies (dev for bruch and prod for assets) (dependencies: nodejs, yarn globally installed)
