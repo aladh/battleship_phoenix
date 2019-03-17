@@ -2,13 +2,9 @@
   use Mix.Project
 
   def project do
-    {<< git_sha::bytes-size(7) >> <> _rest, _exit_code} = System.cmd("git", ["rev-parse", "HEAD"])
-    {commit_num, _exit_code} = System.cmd("git", ["rev-list", "HEAD", "--count"])
-    commit_num = String.trim(commit_num)
-
     [app: :battleship,
-     version: "1.0.0-#{commit_num}-#{git_sha}",
-     elixir: "~> 1.7",
+     version: "1.0.0",
+     elixir: "~> 1.6",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
