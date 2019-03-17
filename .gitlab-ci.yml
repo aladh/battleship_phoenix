@@ -9,7 +9,8 @@ before_script:
 build-master:
   stage: build
   script:
-    - docker build --build-arg SUBREDDIT=$SUBREDDIT --pull -t "$CI_REGISTRY_IMAGE" .
+    - echo $PROD_SECRET | base64 -d > config/prod.secret.exs
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
   only:
     - master
@@ -17,7 +18,8 @@ build-master:
 build:
   stage: build
   script:
-    - docker build --build-arg SUBREDDIT=$SUBREDDIT --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - echo $PROD_SECRET | base64 -d > config/prod.secret.exs
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   except:
     - master
