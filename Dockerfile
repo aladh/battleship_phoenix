@@ -23,7 +23,7 @@ RUN mix phoenix.digest && \
     tar -xzf battleship.tar.gz && \
     rm battleship.tar.gz
 
-FROM alpine:3.8
+FROM alpine:3.9
 
 RUN apk add --no-cache bash openssl
 
