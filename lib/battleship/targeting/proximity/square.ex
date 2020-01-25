@@ -11,7 +11,6 @@ defmodule Battleship.Targeting.Proximity.Square do
   end
 
   def guess(square, board, direction: :vertical) do
-    IO.puts "Vertical Only"
     index = square.index
     cond do
       guess_index = up_guess(index, board) -> guess_index
@@ -21,7 +20,6 @@ defmodule Battleship.Targeting.Proximity.Square do
   end
 
   def guess(square, board, direction: :horizontal) do
-    IO.puts "Horizontal Only"
     index = square.index
     cond do
       guess_index = left_guess(index, board) -> guess_index
@@ -31,22 +29,18 @@ defmodule Battleship.Targeting.Proximity.Square do
   end
 
   defp left_guess(square_index, board) do
-    IO.puts "Guessing left"
     Battleship.Targeting.Proximity.Index.guess(square_index, square_index - 1, board)
   end
 
   defp right_guess(square_index, board) do
-    IO.puts "Guessing right"
     Battleship.Targeting.Proximity.Index.guess(square_index, square_index + 1, board)
   end
 
   defp up_guess(square_index, board) do
-    IO.puts "Guessing one row above"
     Battleship.Targeting.Proximity.Index.guess(square_index, square_index - Battleship.constants.row_length, board)
   end
 
   defp down_guess(square_index, board) do
-    IO.puts "Guessing one row below"
     Battleship.Targeting.Proximity.Index.guess(square_index, square_index + Battleship.constants.row_length, board)
   end
 end

@@ -1,19 +1,13 @@
 defmodule Battleship.Targeting.Hunt do
   def guess(board) do
-    IO.puts "HUNT"
-    IO.inspect healthy_ships(board)
-
     probabilities =
       initialize_probabilities(board.row_length)
       |> increment_probabilities(healthy_ships(board), board)
-
-    IO.inspect probabilities
 
     {coords, _value} = Enum.max_by(probabilities, fn {_k, v} -> v end)
 
     index = Battleship.Board.index_at_coords(coords)
 
-    IO.puts "Guess #{index}"
     index
   end
 

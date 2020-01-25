@@ -1,11 +1,9 @@
 defmodule Battleship.Targeting.Proximity.Index do
   def guess(square_index, guess_index, board) when guess_index == square_index - 1 do
-    if first_in_row(square_index), do: IO.puts "blocking left guess (#{guess_index}) for square at #{square_index}"
     if valid_guess?(guess_index, board) && !first_in_row(square_index), do: guess_index
   end
 
   def guess(square_index, guess_index, board) when guess_index == square_index + 1 do
-    if last_in_row(square_index), do: IO.puts "blocking right guess (#{guess_index}) for square at #{square_index}"
     if valid_guess?(guess_index, board) && !last_in_row(square_index), do: guess_index
   end
 
